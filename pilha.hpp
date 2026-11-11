@@ -1,20 +1,39 @@
 #ifndef PILHA_HPP
 #define PILHA_HPP
 
-#define PILHA_CAPACIDADE 16   // ajustar conforme config
+#include "lista.hpp"
 
-struct Pilha {
-    char itens[PILHA_CAPACIDADE];
-    int topo;
-};
+// No da pilha encadeada
+typedef struct NoPilha {
+    char simbolo;
+    struct NoPilha *prox;
+} NoPilha;
 
-void pilha_iniciar(Pilha *p);
-bool pilha_vazia(const Pilha *p);
-bool pilha_empilhar(Pilha *p, char ing);
-bool pilha_desempilhar(Pilha *p, char *ing_out);
-bool pilha_topo(const Pilha *p, char *ing_out);
-int  pilha_tamanho(const Pilha *p);
-char pilha_elemento(const Pilha *p, int i);  // consulta sem destruir
-void pilha_limpar(Pilha *p);
+// topo e tananho
+typedef struct {
+    NoPilha *topo;
+    int tamanho;
+} Pilha;
+
+void pilha_inicializar(Pilha *p);
+
+
+int pilha_empilhar(Pilha *p, char simbolo);
+char pilha_desempilhar(Pilha *p);
+
+// consulta o topo
+char pilha_topo(const Pilha *p);
+
+//saber tamanho
+int pilha_tamanho(const Pilha *p);
+int pilha_vazia(const Pilha *p);
+
+// nao empilha dps do z
+int pilha_topo_e_z(const Pilha *p);
+
+// retorna 1 se coincide e 0 se nao
+int pilha_coincide_com_lista(const Pilha *p, const Lista *receita);
+
+void pilha_destruir(Pilha *p);
 
 #endif
