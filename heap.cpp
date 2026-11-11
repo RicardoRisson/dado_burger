@@ -1,3 +1,4 @@
+
 #include "heap.hpp"
 #include <stdlib.h>
 
@@ -10,7 +11,11 @@ static void heap_swap(int *a, int *b) {
 static void siftUp(Heap *h, int i) { // "sobe"
     while (i > 0) {
         int pai = (i - 1) / 2;
-        if (h->dados[pai] <= h->dados[i]) break;
+
+        if (h->dados[pai] <= h->dados[i]) {
+            break;
+        }
+
         heap_swap(&h->dados[pai], &h->dados[i]);
         i = pai;
     }
@@ -21,11 +26,13 @@ static void heapify(Heap *h, int i) { // "desce"
     int esq = 2 * i + 1;
     int dir = 2 * i + 2;
 
-    if (esq < h->tamanho && h->dados[esq] < h->dados[menor])
+    if (esq < h->tamanho && h->dados[esq] < h->dados[menor]) {
         menor = esq;
+    }
 
-    if (dir < h->tamanho && h->dados[dir] < h->dados[menor])
+    if (dir < h->tamanho && h->dados[dir] < h->dados[menor]) {
         menor = dir;
+    }
 
     if (menor != i) {
         heap_swap(&h->dados[i], &h->dados[menor]);
@@ -43,7 +50,11 @@ int heap_inserir(Heap *h, int turno_validade) {
     if (h->tamanho == h->capacidade) {
         int nova_cap = (h->capacidade == 0) ? 4 : h->capacidade * 2;
         int *novo = (int*) realloc(h->dados, nova_cap * sizeof(int));
-        if (novo == NULL) return 0;
+
+        if (novo == NULL) {
+            return 0;
+        }
+
         h->dados = novo;
         h->capacidade = nova_cap;
     }
@@ -51,6 +62,7 @@ int heap_inserir(Heap *h, int turno_validade) {
     h->dados[h->tamanho] = turno_validade;
     siftUp(h, h->tamanho);
     h->tamanho++;
+
     return 1;
 }
 
@@ -59,13 +71,16 @@ int heap_minimo(const Heap *h) {
 }
 
 void heap_remover_minimo(Heap *h) {
-    if (h->tamanho == 0) return;
+    if (h->tamanho == 0) {
+        return;
+    }
 
     h->dados[0] = h->dados[h->tamanho - 1];
     h->tamanho--;
 
-    if (h->tamanho > 0)
+    if (h->tamanho > 0) {
         heapify(h, 0);
+    }
 }
 
 int heap_tamanho(const Heap *h) {
