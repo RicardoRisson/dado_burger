@@ -13,7 +13,16 @@
 #define CFG_VALIDADE_BACON    3   
 
 // cache de pedidos que o enunciado fala que tem q ser com hash
-#define CFG_HASH_M            101 
+// [Person A] m changed 101 -> 1009 (prime). See docs/adaptacoes.md, item "config.hpp".
+// #ifndef lets the tests change it with -DCFG_HASH_M=101 without editing this file.
+#ifndef CFG_HASH_M
+#define CFG_HASH_M            1009
+#endif
+
+// [Person A] 1 = also build the Splay Tree (extra) to compare with the AVL, 0 = skip it
+#ifndef CFG_COMPARAR_SPLAY
+#define CFG_COMPARAR_SPLAY    1
+#endif
 
 // log obrigatorio
 #define CFG_ARQUIVO_LOG       "medicoes.log"

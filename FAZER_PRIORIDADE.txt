@@ -1,0 +1,4 @@
+1. ajeitar o pedidos.hpp pra ficar bem certo
+2. função de ordenação e o ordenação.hpp
+3. carregar_pedidos e carregar_historio e registrar_log_carregamento
+4. pedidos.cpp, da AVL, do HASH da ordenação e do medicoes.log dela
