@@ -83,10 +83,6 @@ void heap_remover_minimo(Heap *h) {
     }
 }
 
-int heap_tamanho(const Heap *h) {
-    return h->tamanho;
-}
-
 int heap_vazio(const Heap *h) {
     return h->tamanho == 0;
 }
