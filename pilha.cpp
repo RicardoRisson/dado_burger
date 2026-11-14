@@ -33,14 +33,6 @@ char pilha_desempilhar(Pilha *p) {
     return s;
 }
 
-char pilha_topo(const Pilha *p) {
-    if (p->topo == NULL) {
-        return '\0';
-    }
-
-    return p->topo->simbolo;
-}
-
 int pilha_tamanho(const Pilha *p) {
     return p->tamanho;
 }

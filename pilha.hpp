@@ -21,9 +21,6 @@ void pilha_inicializar(Pilha *p);
 int pilha_empilhar(Pilha *p, char simbolo);
 char pilha_desempilhar(Pilha *p);
 
-// consulta o topo
-char pilha_topo(const Pilha *p);
-
 //saber tamanho
 int pilha_tamanho(const Pilha *p);
 int pilha_vazia(const Pilha *p);
