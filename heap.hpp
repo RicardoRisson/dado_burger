@@ -5,7 +5,6 @@
 typedef struct {
     int *dados;
     int tamanho;
-    int capacidade;
 } Heap;
 
 void heap_inicializar(Heap *h, int capacidade_inicial);
@@ -20,7 +19,6 @@ int heap_minimo(const Heap *h);
 void heap_remover_minimo(Heap *h);
 
 // saber o tamanho e se ta vazio
-int heap_tamanho(const Heap *h);
 int heap_vazio(const Heap *h);
 
 // libera o vetor interno
