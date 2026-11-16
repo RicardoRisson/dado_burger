@@ -18,12 +18,10 @@
 #define ING_OVO_FRITO     'o'
 #define ING_BACON         'b'
 
-typedef enum {
-    CAT_INVALIDO = 0,
-    CAT_INFINITO,
-    CAT_PERENE,
-    CAT_PERECIVEL
-} CategoriaIngrediente;
+#define CAT_INVALIDO  0
+#define CAT_INFINITO  1
+#define CAT_PERENE    2
+#define CAT_PERECIVEL 3
 
 typedef struct {
     int codigo;

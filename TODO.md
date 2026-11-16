@@ -1,32 +1,56 @@
-1. URGENTE (sem isso a entrega fica incompleta)
+# TODO — Dado Burger (só o que realmente falta)
 
-Relatório em PDF (máx. 8 páginas, template da aula), com as seções na ordem: Introdução, O jogo, Estruturas de dados, Medições e análise, Conclusão e Declaração de uso de IA.
-Seção de medições em tabelas, comparando com a teoria. Exemplos:
-A altura 20 da AVL com 837 mil nós, abaixo do limite de 1,44·log₂ n.
-As 837233 rotações altas porque o pedidos.txt está ordenado.
-A hash com hits, misses, colisões e λ.
-O tempo do Merge Sort.
-Seção de estruturas de dados (o adaptações.txt vira isto). Atualize com o texto final e inclua a função hash, o valor de m (1009) e a política de colisão (encadeamento separado), todos com justificativa.
-Justificar os parâmetros do jogo na seção “O jogo”: paciência 15, 2 clientes, validade 3/2/3.
-medicoes.log gerado com pedidos.txt e historico.txt e incluído no zip.
-Declaração de uso de IA, se a sua turma exigir.
-Zip no formato certo (tp-grupoX.zip) com os .c/.h, o log e o PDF.
+## 1. Obrigatório
 
-2. FORTEMENTE SUGERIDO (pode dar problema)
+- [ ] Relatório em PDF (máx. 8 páginas, incluindo capa, template da aula), com as seções nesta ordem:
+  - [ ] Introdução: grupo, visão geral, requisitos implementados e não implementados (com justificativa)
+  - [ ] O jogo: como funciona a partida, ações, extras (splay tree) e justificativa dos parâmetros:
+    - Paciência: 15
+    - Clientes: 2
+    - Validade: carne 3 / ovo 2 / bacon 3
+    - Algoritmo de ordenação: Merge Sort
+  - [ ] Estruturas de dados: uma subseção por estrutura (AVL, lista contígua dinâmica, hash, lista encadeada, pilha, fila, heap), com as adaptações feitas (converter o adaptacoes.txt) e:
+    - Hash: função de divisão (chave mod m), m = 1009, encadeamento separado, com justificativa
+    - Heap: min-heap, armazenando direto turno de preparo + validade
+    - Histórico: chamar de "lista contígua dinâmica"
+  - [ ] Medições e análise: tabelas comparando empírico x teoria:
+    - AVL: 837.253 nós, altura 20 (limite teórico 1,44·log2 n ≈ 28), 837.233 rotações (pedidos.txt está ordenado, ~1 rotação por inserção)
+    - Buscas na AVL: média de comparações por busca (~log2 n)
+    - Hash: hits, misses, taxa de acerto, colisões, λ = n/m (explicar que com poucos clientes quase não há hit)
+    - Merge Sort: tempo de ordenação do histórico (n ≈ 100 mil)
+    - Splay x AVL, se for contar como extra
+  - [ ] Conclusão: dificuldades, divisão de tarefas, aprendizados
+  - [ ] Declaração de uso de IA: obrigatória (enunciado §9.6 e §10). Informar ferramenta, finalidade e artefatos 
+- [ ] Gerar o medicoes.log final:
+  1. Restaurar o historico.txt original (partidas de teste acrescentam linhas)
+  2. Rodar `./dado_burger pedidos.txt historico.txt`
+  3. Jogar uma partida até o fim
+  4. Abrir o Histórico (opção 3) para registrar o tempo de ordenação
+  5. Sair pelo 0, sem rodar de novo (cada execução sobrescreve o log)
+  6. Conferir que não aparece "Ainda nao medido"
+- [ ] Montar o tp-grupoX.zip só com os .c, .h, medicoes.log e o PDF
 
-Heap: descrever no relatório que é max-heap com valor negativo, ou voltar ao min-heap. O enunciado pede “heap mínimo” e é pergunta provável na apresentação.
-Histórico: chamar de “lista contígua dinâmica” no relatório.
-Testar com um pedidos pequeno (como o do apêndice, 3 pedidos) e um historico.txt que não existe, que é um caso que o enunciado exige tratar.
-Testar p b vários turnos para confirmar que o heap com CFG_HEAP_CAP 3 não estoura.
-Compilar do zero com gcc -std=c99 -Wall -lm *.c na máquina que vai apresentar.
-Tirar o dado_burger do git e usar .gitignore.
-Saber explicar o código para a apresentação: valor negativo no heap, splay top-down, métricas da hash.
+## 2. Recomendado
 
-3. LUXO (pequenos ajustes)
+- [ ] Compilar do zero na máquina da apresentação: `gcc -o dado_burger *.c -lm -Wall -std=c99` (já compila sem warnings aqui)
+- [ ] Revisar para a arguição:
+  - Min-heap: heapify/siftUp, descarte dos vencidos no início do turno
+  - Splay tree top-down
+  - Cálculo das métricas da hash (colisão por inserção em posição ocupada, λ = n/m)
+- [ ] Mencionar no relatório que CFG_HEAP_CAP = 3 basta porque só se prepara 1 unidade por turno e a validade máxima é 3 (se aumentar a validade, aumentar a capacidade)
 
-Trocar o enum CategoriaIngrediente por #define.
-Renomear adaptações.txt para adaptacoes.txt e apagar os rascunhos (adaptacoes.md, FAZER_PRIORIDADE.txt).
-Alinhar a coluna da seção hash com as outras no relatório.
-Remover o #include <string.h> sem uso no ordenacao.c.
-Criar um Makefile.
-Padronizar as chaves nos arquivos que ainda estão sem (avl.c, splay.c, fila.c, etc.).
+## Já feito / não precisa
+
+- [x] Heap trocado para min-heap
+- [x] enum CategoriaIngrediente trocado por #define
+- [x] adaptacoes.txt renomeado, sem rascunhos
+- [x] Teste de borda: 3 pedidos sem historico.txt (passou)
+- [x] Teste de borda: `p b` repetido com CFG_HEAP_CAP = 3 (passou, sem erros no AddressSanitizer)
+- [x] Compilação limpa com -Wall -std=c99
+- [x] Binário dado_burger não está no Git (nada a remover)
+- [x] Remover `#include <string.h>` não usado em ordenacao.c
+
+## Opcional (cosmético, só se sobrar tempo)
+
+- [ ] Uniformizar o estilo das chaves em avl.c, splay.c, fila.c etc.
+- [ ] Makefile e .gitignore (a entrega é um zip, então não contam)

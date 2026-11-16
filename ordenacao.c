@@ -5,7 +5,6 @@
 #include "timer.h"
 #include "config.h"
 #include <stdlib.h>
-#include <string.h>
 
 static char minuscula(char c){
     if (c >= 'A' && c <= 'Z'){

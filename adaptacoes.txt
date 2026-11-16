@@ -1,9 +1,7 @@
 Decisão geral: 
 não testei o retorno do malloc/calloc/realloc em nenhum TAD
 (fila, pilha, lista, hash, heap, AVL), pois o programa é um jogo pequeno e
-a falha de alocação não é tratada; manter o teste só em alguns seria
-inconsistente.
-
+a falha de alocação não é tratada
 
 FILAS:
 adicionei o campo tamanho na fila, fazendo a consulta ser em O(1)
@@ -21,7 +19,8 @@ adicionei hash_destruir pra liberar memória
 
 HEAP:
 FilaPrioridade virou Heap pq nao faz sentido ser fil prioridade acho
-pra pegar o menor turno_validade guardo o valor negativo (o maior negativo é o menor turno)
+virou min-heap: heapify e siftUp trocam o > por <, então o topo é sempre o menor turno_validade
+fpMaximo e fpRemoverMaximo viraram fpMinimo e fpRemoverMinimo, e guardo direto turno de preparo + validade
 CFG_HEAP_CAP ta no config.h com tamanho 3 pq perece em 3 turnos
 não implementei buildHeap, HeapSort nem checagem de heap cheio/vazio pq não precisava
 

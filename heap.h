@@ -12,7 +12,7 @@ void heapify(int a[], int n, int i);
 void siftUp(int a[], int i);
 
 void fpInserir(Heap *h, int valor);
-int  fpMaximo(Heap *h);
-int  fpRemoverMaximo(Heap *h);
+int  fpMinimo(Heap *h);
+int  fpRemoverMinimo(Heap *h);
 
 #endif

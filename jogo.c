@@ -63,7 +63,7 @@ static int posicao(const char *vet, char s){
     return -1;
 }
 
-static CategoriaIngrediente categoria(char s){
+static int categoria(char s){
     if (posicao(INFINITOS, s) >= 0){
         return CAT_INFINITO;
     }
@@ -86,8 +86,8 @@ static int ler_linha(char *buf, int tam){
 
 static void descartar_vencidos(Estoque *e, int turno){
     for (int i = 0; i < 3; i++){
-        while (e->pereciveis[i].tam > 0 && -fpMaximo(&e->pereciveis[i]) <= turno){
-            fpRemoverMaximo(&e->pereciveis[i]);
+        while (e->pereciveis[i].tam > 0 && fpMinimo(&e->pereciveis[i]) <= turno){
+            fpRemoverMinimo(&e->pereciveis[i]);
         }
     }
 }
@@ -138,7 +138,7 @@ static int acao_preparar(Estoque *e, char s, int turno){
     }
     i = posicao(PERECIVEIS, s);
     if (i >= 0){
-        fpInserir(&e->pereciveis[i], -(turno + VALIDADE[i]));
+        fpInserir(&e->pereciveis[i], turno + VALIDADE[i]);
         return 1;
     }
     printf("Esse ingrediente nao existe ou nao requer preparo.\n");
@@ -150,7 +150,7 @@ static int acao_adicionar(Estoque *e, Pilha *prato, char s){
         printf("O pao de cima ja foi colocado.\n");
         return 0;
     }
-    CategoriaIngrediente cat = categoria(s);
+    int cat = categoria(s);
     if (cat == CAT_INFINITO){
         pilha_empilhar(prato, s);
         return 1;
@@ -171,7 +171,7 @@ static int acao_adicionar(Estoque *e, Pilha *prato, char s){
             printf("Sem %s no estoque.\n", nome_ingrediente(s));
             return 0;
         }
-        fpRemoverMaximo(&e->pereciveis[i]);
+        fpRemoverMinimo(&e->pereciveis[i]);
         pilha_empilhar(prato, s);
         return 1;
     }
