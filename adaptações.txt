@@ -22,7 +22,7 @@ adicionei hash_destruir pra liberar memória
 HEAP:
 FilaPrioridade virou Heap pq nao faz sentido ser fil prioridade acho
 pra pegar o menor turno_validade guardo o valor negativo (o maior negativo é o menor turno)
-HEAP_CAP ta no config.h com tamanho 3 pq perece em 3 turnos
+CFG_HEAP_CAP ta no config.h com tamanho 3 pq perece em 3 turnos
 não implementei buildHeap, HeapSort nem checagem de heap cheio/vazio pq não precisava
 
 LISTA:
