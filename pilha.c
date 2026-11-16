@@ -1,4 +1,5 @@
 #include "pilha.h"
+
 #include <stdlib.h>
 
 void pilha_inicializar(Pilha *p) {

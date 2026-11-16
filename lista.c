@@ -1,15 +1,14 @@
 #include "lista.h"
 #include <stdlib.h>
 
-
-void lista_inicializar(Lista *l) {
+void inicializar(Lista *l) {
     l->ini = NULL;
     l->fim = NULL;
     l->tamanho = 0;
 }
 
-void inserir_fim(Lista *l, char simbolo) {
-    NoLista *novo = malloc(sizeof(NoLista));
+void inserirFim(Lista *l, char simbolo) {
+    NoLista *novo = (NoLista*) malloc(sizeof(NoLista));
 
     novo->simbolo = simbolo;
     novo->prox = NULL;
@@ -24,7 +23,7 @@ void inserir_fim(Lista *l, char simbolo) {
     l->tamanho++;
 }
 
-void lista_destruir(Lista *l) {
+void destruir(Lista *l) {
     NoLista *aux = l->ini;
     while (aux != NULL) {
         NoLista *prox = aux->prox;

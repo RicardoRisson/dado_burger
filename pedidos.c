@@ -158,9 +158,9 @@ void pedidos_iniciar_partida(void) {
 }
 
 void receita_para_lista(const char *receita, Lista *lista_out) {
-    lista_inicializar(lista_out);
+    inicializar(lista_out);
     for (int i = 0; receita[i] != '\0'; i++) {
-        inserir_fim(lista_out, receita[i]);
+        inserirFim(lista_out, receita[i]);
     }
 }
 

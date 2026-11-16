@@ -1,6 +1,5 @@
 #ifndef PEDIDOS_H
 #define PEDIDOS_H
-
 #include "tipos.h"
 #include "lista.h"
 

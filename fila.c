@@ -17,11 +17,12 @@ void fila_entrar(Fila *f, const Cliente *c) {
     novo->dado = *c;
     novo->prox = NULL;
 
-    if (f->final != NULL)
+    if (f->final != NULL){
         f->final->prox = novo;
-    else
+    }else{
         f->frente = novo;
-
+    }
+    
     f->final = novo;
     f->tamanho++;
 }
@@ -30,8 +31,9 @@ void fila_sair(Fila *f) {
     NoFila *removido = f->frente;
     f->frente = removido->prox;
 
-    if (f->frente == NULL)
+    if (f->frente == NULL){
         f->final = NULL;
+    }
 
     free(removido);
     f->tamanho--;

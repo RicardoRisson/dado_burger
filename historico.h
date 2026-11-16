@@ -3,7 +3,6 @@
 
 #include "tipos.h"
 
-
 void carregar_historico(const char *caminho_arquivo);
 
 void adicionar_historico(const char *nome, int pontuacao);

@@ -4,7 +4,6 @@
 #include "tipos.h"
 #include "metricas.h"
 
-
 typedef struct NoHash {
     Pedido  pedido;
     struct NoHash *prox;

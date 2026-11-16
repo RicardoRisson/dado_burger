@@ -1,0 +1,73 @@
+Decisão geral: 
+não testei o retorno do malloc/calloc/realloc em nenhum TAD
+(fila, pilha, lista, hash, heap, AVL), pois o programa é um jogo pequeno e
+a falha de alocação não é tratada; manter o teste só em alguns seria
+inconsistente.
+
+
+FILAS:
+adicionei o campo tamanho na fila, fazendo a consulta ser em O(1)
+fila_entrar recebe const Cliente* e fila_frente retorna Cliente* pra evitar cópias da struct
+botei fila destruir pra poder liberar memoria
+o programa chama fila_vazia antes de fila_sair/fila_frente, então os testes de malloc e fila vazia eram redundantes
+mudança de cod, nome e preço por motivos obvios
+
+HASH:
+chave e valor virou pedido, obvios
+remoçao, rehashing e teste de maloc nao implementei pq so precisa inserir e consultar
+prefixo hash_ pra não colidir com outros TADs, hash_buscar retorna 1/0 e devolve o pedido por parâmetro
+sem valor tipo -1
+adicionei hash_destruir pra liberar memória
+
+HEAP:
+FilaPrioridade virou Heap pq nao faz sentido ser fil prioridade acho
+pra pegar o menor turno_validade guardo o valor negativo (o maior negativo é o menor turno)
+HEAP_CAP ta no config.h com tamanho 3 pq perece em 3 turnos
+não implementei buildHeap, HeapSort nem checagem de heap cheio/vazio pq não precisava
+
+LISTA:
+usei lista duplamente encadeda, pois é a que se encaixa melhor
+Produto virou char simbolo pq a lista guarda os ingredientes da receita
+adicionei o campo tamanho pra consultar em O(1) sem percorrer a lista
+não implementei imprimir, buscar, inserirInicio, remover nem teste de malloc pq não precisava
+
+PILHA:
+Produto virou char simbolo pq a pilha guarda os ingredientes do hamburguer
+adicionei o campo tamanho pra consultar em O(1) sem percorrer a pilha
+adicionei pilha_topo_e_z e pilha_coincide_com_lista pra checar o pão de cima e comparar o hamburguer com a receita (usa a Lista)
+adicionei pilha_destruir pra liberar a memória
+prefixo pilha_ pra não colidir com os nomes da lista (destruir, inicializar)
+não implementei topo nem teste de malloc/underflow pq não precisava
+
+AVL:
+dado virou Pedido, com chave pedido.codigo, obvio
+mudei altura, NULL vale 0 e folha 1 (na aula NULL era -1 e folha 0), o FB sai igual
+juntei o cálculo do FB e as rotações numa função reequilibrar
+métricas (rotações, comparações, tempo de busca, altura) em MetricasArvore, fora da árvore, pra comparar com a splay
+avl_inserir retorna 1/0 (0 se o código já existe) e avl_buscar retorna ponteiro pro pedido, sem cópia
+uso o prefixo avl_ nao usado em aula e adicionei avl_altura e avl_destruir
+não implementei remoção nem teste de malloc pq só precisa inserir e buscar
+
+MERGE SORT:
+dado virou EntradaHistorico, motivos obvios
+uso ponteiro pra função de comparação pra ordenar por nome ou por pontuação com o mesmo código
+ordeno uma cópia do histórico pra não mexer no original, e guardo o tempo em Metricas pra comparar no relatório
+comparar_nome ignora maiúsculas/minúsculas
+
+HISTORICO:
+é um vetor dinamico que dobra a capacidade (realloc) quando enche, carregado de um arquivo e gravado em modo append
+guarda EntradaHistorico (nome e pontuacao), o nome é cortado em 20 caracteres
+nao testei malloc/realloc/fopen pq nao precisava
+
+TIPOS:
+Pedido (codigo e receita) e EntradaHistorico (nome e pontuacao) no lugar do Produto da aula, obvio
+
+SPLAY:
+fiz o splay top-down (desce montando duas arvores auxiliares com um sentinela) em vez do bottom-up com zig/zig-zig/zig-zag da aula, o resultado é o mesmo mas faz tudo numa descida só
+dado virou Pedido, com chave pedido.codigo
+splay_inserir faz o splay pela chave e depois parte a arvore em volta do novo no, retorna 1/0 (0 se o codigo ja existe)
+splay_buscar retorna ponteiro pro pedido, sem copia, e faz splay a cada busca
+metricas (rotacoes, comparacoes, tempo de busca, altura) em MetricasArvore, igual a AVL, pra comparar as duas
+adicionei splay_calcular_altura (com pilha em vetor) e splay_destruir
+prefixo splay_
+nao implementei remocao nem teste de malloc pq so precisa inserir e buscar

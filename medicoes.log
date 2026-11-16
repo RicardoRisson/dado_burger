@@ -1,41 +1,30 @@
 === RELATORIO DE DESEMPENHO ===
+
 -- AVL: carregamento --
-Nos inseridos: 837253
-Altura resultante: 20
-Rotacoes (insercao): 837233
-Tempo de carregamento: 0.529510 s
+Nos inseridos:                  837253
+Altura resultante:              20
+Rotacoes (insercao):            837233
+Tempo de carregamento:          0.529753 s
+
 -- Historico: carregamento --
-Entradas carregadas: 100001
+Entradas carregadas:            100003
+
 -- AVL: buscas durante a partida --
-Total de buscas: 0
-Total de comparacoes: 0
-Media de comparacoes por busca: 0.00
-Tempo total acumulado: 0.000000 s
+Total de buscas:                2
+Total de comparacoes:           39
+Media de comparacoes por busca: 19.50
+Tempo total acumulado:          0.000024 s
+
 -- Tabela hash --
-Tamanho (m): 1009
-Entradas ocupadas (n): 0
-Fator de carga (lambda): 0.00
-Total de hits: 0
-Total de misses: 0
-Taxa de acerto: 0.0%
-Total de colisoes: 0
+Tamanho (m):                 1009
+Entradas ocupadas (n):       2
+Fator de carga (lambda):     0.00
+Total de hits:               0
+Total de misses:             2
+Taxa de acerto:              0.0%
+Total de colisoes:           0
+
 -- Ordenacao do historico (ao acessar Historico) --
-Tamanho: 100001 entradas
-Merge Sort (por nome): 0.082801 s  [medicoes: 1, melhor: 0.082801 s]
--- Extra: leitura dos arquivos --
-Tempo de leitura dos pedidos: 0.074836 s
-Tempo so de insercao na AVL: 0.454670 s
-Partidas encerradas nesta execucao: 0
--- Extra: Splay Tree comparada com AVL --
-                         AVL            Splay
-Nos inseridos:           837253         837253
-Altura:                  20             837253
-Rotacoes (insercao):     837233         0
-Tempo de insercao (s):   0.454670       0.030316
-Tempo de carga (s):      0.529510       0.105152
-Buscas na partida:       0              0
-Comparacoes (total):     0              0
-Comparacoes por busca:   0.00           0.00
-Tempo de buscas (s):     0.000000       0.000000
-Rotacoes nas buscas:     0              0
+Ainda nao medido (abra a tela Historico).
+
 ================================

@@ -13,10 +13,10 @@ typedef struct {
     int tamanho;
 } Lista;
 
-void lista_inicializar(Lista *l);
+void inicializar(Lista *l);
 
-void inserir_fim(Lista *l, char simbolo);
+void inserirFim(Lista *l, char simbolo);
 
-void lista_destruir(Lista *l);
+void destruir(Lista *l);
 
 #endif

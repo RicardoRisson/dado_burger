@@ -1,7 +1,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-
+#define CFG_HEAP_CAP 3
 #define CFG_NUM_CLIENTES      2   
 #define CFG_PACIENCIA_MAXIMA  15  
 

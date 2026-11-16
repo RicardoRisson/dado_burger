@@ -10,7 +10,7 @@
 #define TAM_ENTRADA   256
 #define HIST_MOSTRAR  20
 
-static void tela_como_jogar(void) {
+static void tela_como_jogar(void){
     printf("\n=== COMO JOGAR ===\n");
     printf("Objetivo: atender todos os clientes do Dado Burger montando o hamburguer\n");
     printf("exatamente como o pedido, antes que a paciencia do cliente da frente acabe.\n\n");
@@ -31,29 +31,36 @@ static void tela_como_jogar(void) {
     fgets(lixo, TAM_ENTRADA, stdin);
 }
 
-static void tela_historico(void) {
+static void tela_historico(void){
     char linha[TAM_ENTRADA];
+    int escolha = 0;
     printf("\n=== HISTORICO ===\n1) Ordem alfabetica\n2) Pontuacao decrescente\n> ");
-    if (fgets(linha, TAM_ENTRADA, stdin) == NULL)
+    if (fgets(linha, TAM_ENTRADA, stdin) == NULL){
         return;
-    CriterioOrdenacao criterio = ORDENAR_POR_NOME;
-    if (atoi(linha) == 2)
-        criterio = ORDENAR_POR_PONTUACAO;
+    }
+    sscanf(linha, "%d", &escolha);
+
+    CriterioOrdenacao criterio;
+    criterio.tipo = ORDENAR_POR_NOME;
+    if (escolha == 2){
+        criterio.tipo = ORDENAR_POR_PONTUACAO;
+    }
 
     EntradaHistorico *copia;
     int n;
     double tempo;
     ordenar_historico(criterio, &copia, &n, &tempo);
 
-    for (int i = 0; i < n && i < HIST_MOSTRAR; i++)
+    for (int i = 0; i < n && i < HIST_MOSTRAR; i++){
         printf("%3d. %-20s %d\n", i + 1, copia[i].nome, copia[i].pontuacao);
+    }
     printf("(%d de %d entradas) %s: %.6f s\n", n < HIST_MOSTRAR ? n : HIST_MOSTRAR, n,
            nome_algoritmo_ordenacao(), tempo);
     liberar_copia_ordenada(copia);
 }
 
-int main(int argc, char *argv[]) {
-    if (argc < 3) {
+int main(int argc, char *argv[]){
+    if (argc < 3){
         fprintf(stderr, "Uso: %s <arquivo_pedidos> <arquivo_historico>\n",
                 argv[0]);
         return 1;
@@ -62,7 +69,7 @@ int main(int argc, char *argv[]) {
     const char *arq_pedidos   = argv[1];
     const char *arq_historico = argv[2];
 
-    if (!carregar_pedidos(arq_pedidos)) {
+    if (!carregar_pedidos(arq_pedidos)){
         fprintf(stderr, "Erro: nao foi possivel carregar '%s'\n",
                 arq_pedidos);
         return 1;
@@ -74,18 +81,21 @@ int main(int argc, char *argv[]) {
 
     char linha[TAM_ENTRADA];
     int opcao = -1;
-    while (opcao != 0) {
+    while (opcao != 0){
         printf("\n=== DADO BURGER ===\n1) Novo jogo\n2) Como jogar\n3) Historico\n0) Sair\n> ");
-        if (fgets(linha, TAM_ENTRADA, stdin) == NULL)
+        if (fgets(linha, TAM_ENTRADA, stdin) == NULL){
             break;
-        opcao = atoi(linha);
+        }
+        opcao = -1;
+        sscanf(linha, "%d", &opcao);
 
-        if (opcao == 1)
+        if (opcao == 1){
             jogo_executar();
-        else if (opcao == 2)
+        }else if (opcao == 2){
             tela_como_jogar();
-        else if (opcao == 3)
+        }else if (opcao == 3){
             tela_historico();
+        }
     }
 
     liberar_historico();

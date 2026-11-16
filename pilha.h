@@ -15,7 +15,6 @@ typedef struct {
 
 void pilha_inicializar(Pilha *p);
 
-
 void pilha_empilhar(Pilha *p, char simbolo);
 char pilha_desempilhar(Pilha *p);
 

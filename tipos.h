@@ -10,12 +10,10 @@
 #define ING_MOSTARDA      'm'
 #define ING_PICLES        'p'
 #define ING_ALFACE        'a'
-
 #define ING_QUEIJO_SUICO   's'
 #define ING_QUEIJO_CHEDDAR 'q'
 #define ING_CEBOLA         'c'
 #define ING_TOMATE         't'
-
 #define ING_CARNE         'n'
 #define ING_OVO_FRITO     'o'
 #define ING_BACON         'b'

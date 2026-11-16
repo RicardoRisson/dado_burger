@@ -1,7 +1,6 @@
 #ifndef METRICAS_H
 #define METRICAS_H
 
-
 typedef struct {
     long long nos_inseridos;
     int       altura;

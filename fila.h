@@ -9,6 +9,7 @@ typedef struct {
     int paciencia;
 } Cliente;
 
+
 typedef struct NoFila NoFila;
 
 struct NoFila {
