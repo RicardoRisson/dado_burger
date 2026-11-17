@@ -1,14 +1,15 @@
 #ifndef HASH_H
 #define HASH_H
-
 #include "tipos.h"
 #include "metricas.h"
 
+// struct que guarda o prox e o dado do pedido
 typedef struct NoHash {
     Pedido  pedido;
     struct NoHash *prox;
 } NoHash;
 
+// struct da tabela hash, cada slot guarda uma lista de pedido
 typedef struct {
     NoHash       **slots;
     int            m;
