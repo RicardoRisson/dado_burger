@@ -10,6 +10,7 @@
 #define TAM_ENTRADA   256
 #define HIST_MOSTRAR  20
 
+// tela estatica com as regras
 static void tela_como_jogar(void){
     printf("\n=== COMO JOGAR ===\n");
     printf("Objetivo: atender todos os clientes do Dado Burger montando o hamburguer\n");
@@ -31,6 +32,7 @@ static void tela_como_jogar(void){
     fgets(lixo, TAM_ENTRADA, stdin);
 }
 
+// ordena uma copia do historico e mostra so os primeiros
 static void tela_historico(void){
     char linha[TAM_ENTRADA];
     int escolha = 0;
@@ -51,6 +53,7 @@ static void tela_historico(void){
     double tempo;
     ordenar_historico(criterio, &copia, &n, &tempo);
 
+    // n pode ser maior que o limite da tela
     int mostrados = n;
     if (n > HIST_MOSTRAR){
         mostrados = HIST_MOSTRAR;
@@ -64,6 +67,7 @@ static void tela_historico(void){
     liberar_copia_ordenada(copia);
 }
 
+// carrega pedidos e historico dos argumentos e abre o menu
 int main(int argc, char *argv[]){
     if (argc < 3){
         fprintf(stderr, "Uso: %s <arquivo_pedidos> <arquivo_historico>\n",
@@ -82,6 +86,7 @@ int main(int argc, char *argv[]){
 
     carregar_historico(arq_historico);
 
+    // grava no log as metricas do carregamento
     registrar_log_carregamento(CFG_ARQUIVO_LOG);
 
     char linha[TAM_ENTRADA];
