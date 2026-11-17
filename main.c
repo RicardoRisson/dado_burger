@@ -51,10 +51,15 @@ static void tela_historico(void){
     double tempo;
     ordenar_historico(criterio, &copia, &n, &tempo);
 
-    for (int i = 0; i < n && i < HIST_MOSTRAR; i++){
+    int mostrados = n;
+    if (n > HIST_MOSTRAR){
+        mostrados = HIST_MOSTRAR;
+    }
+
+    for (int i = 0; i < mostrados; i++){
         printf("%3d. %-20s %d\n", i + 1, copia[i].nome, copia[i].pontuacao);
     }
-    printf("(%d de %d entradas) %s: %.6f s\n", n < HIST_MOSTRAR ? n : HIST_MOSTRAR, n,
+    printf("(%d de %d entradas) %s: %.6f s\n", mostrados, n,
            nome_algoritmo_ordenacao(), tempo);
     liberar_copia_ordenada(copia);
 }
