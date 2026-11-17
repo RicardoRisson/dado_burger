@@ -1,5 +1,6 @@
 #include "heap.h"
 
+// desce o no i ate o menor filho ser maior que ele
 void heapify(int a[], int n, int i){
     int menor = i;
     int esq   = 2*i + 1;
@@ -20,6 +21,7 @@ void heapify(int a[], int n, int i){
     }
 }
 
+// sobe o no i ate o pai ser menor que ele
 void siftUp(int a[], int i){
     while (i > 0){
         int pai = (i - 1) / 2;
@@ -34,16 +36,19 @@ void siftUp(int a[], int i){
     }
 }
 
+// poe no final e sobe
 void fpInserir(Heap *h, int valor){
     h->dados[h->tam] = valor;
     siftUp(h->dados, h->tam);
     h->tam++;
 }
 
+// o menor fica sempre na raiz
 int fpMinimo(Heap *h){
     return h->dados[0];
 }
 
+// tira a raiz, poe o ultimo no lugar e desce
 int fpRemoverMinimo(Heap *h){
     int min = h->dados[0];
     h->tam--;

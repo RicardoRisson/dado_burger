@@ -3,6 +3,7 @@
 
 #include "config.h"
 
+// min-heap em vetor, dados guarda o turno de validade e tam quantos tem
 typedef struct {
     int dados[CFG_HEAP_CAP];
     int tam;
