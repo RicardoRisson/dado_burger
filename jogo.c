@@ -9,16 +9,17 @@
 #include "lista.h"
 #include "heap.h"
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
 #define TAM_ENTRADA 256
 
+// simbolos de cada categoria, a posicao no vetor e o indice no estoque
 static const char PERENES[]    = "sqct";
 static const char PERECIVEIS[] = "nob";
 static const char INFINITOS[]  = "zkmpa";
 static const int  VALIDADE[3]  = { CFG_VALIDADE_CARNE, CFG_VALIDADE_OVO, CFG_VALIDADE_BACON };
 
+// contador pros perenes e um heap pra cada perecivel
 typedef struct {
     int  perenes[4];
     Heap pereciveis[3];
@@ -54,6 +55,7 @@ static const char* nome_ingrediente(char s){
     return "?";
 }
 
+// indice do simbolo no vetor, -1 se nao tem
 static int posicao(const char *vet, char s){
     for (int i = 0; vet[i] != '\0'; i++){
         if (vet[i] == s){
@@ -84,6 +86,7 @@ static int ler_linha(char *buf, int tam){
     return 1;
 }
 
+// tira do heap o que vence neste turno ou antes
 static void descartar_vencidos(Estoque *e, int turno){
     for (int i = 0; i < 3; i++){
         while (e->pereciveis[i].tam > 0 && fpMinimo(&e->pereciveis[i]) <= turno){
@@ -92,6 +95,7 @@ static void descartar_vencidos(Estoque *e, int turno){
     }
 }
 
+// imprime o pedido, o prato e o estoque (desempilha e empilha de volta pra nao perder o prato)
 static void mostrar_tela(const Cliente *c, int numero, Pilha *prato, const Estoque *e, int turno){
     printf("\n=========== Cliente %d de %d | turno %d ===========\n", numero, CFG_NUM_CLIENTES, turno);
     printf("Turnos restantes (paciencia): %d\n", c->paciencia);
@@ -130,6 +134,7 @@ static void mostrar_tela(const Cliente *c, int numero, Pilha *prato, const Estoq
     printf("Comandos: p <ing> preparar | a <ing> adicionar | r remover topo | s sair\n");
 }
 
+// retorna 1 se gastou turno
 static int acao_preparar(Estoque *e, char s, int turno){
     int i = posicao(PERENES, s);
     if (i >= 0){
@@ -145,6 +150,7 @@ static int acao_preparar(Estoque *e, char s, int turno){
     return 0;
 }
 
+// retorna 1 se gastou turno
 static int acao_adicionar(Estoque *e, Pilha *prato, char s){
     if (pilha_topo_e_z(prato)){
         printf("O pao de cima ja foi colocado.\n");
@@ -188,6 +194,7 @@ static int acao_remover(Pilha *prato){
     return 1;
 }
 
+// uma partida inteira
 void jogo_executar(void){
     pedidos_iniciar_partida();
 
@@ -257,6 +264,7 @@ void jogo_executar(void){
                 break;
             }
 
+            // fim da acao: confere o hamburguer, senao perde 1 de paciencia
             turno++;
             if (pilha_topo_e_z(&prato) && pilha_coincide_com_lista(&prato, &receita)){
                 concluido = 1;
