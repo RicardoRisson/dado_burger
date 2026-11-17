@@ -7,6 +7,7 @@ void pilha_inicializar(Pilha *p) {
     p->tamanho = 0;
 }
 
+// empilhar
 void pilha_empilhar(Pilha *p, char simbolo) {
     NoPilha *novo = malloc(sizeof(NoPilha));
 
@@ -16,6 +17,7 @@ void pilha_empilhar(Pilha *p, char simbolo) {
     p->tamanho++;
 }
 
+// desempilha e retorna o simbolo do topo
 char pilha_desempilhar(Pilha *p) {
     NoPilha *alvo = p->topo;
     char s = alvo->simbolo;
@@ -33,10 +35,12 @@ int pilha_vazia(const Pilha *p) {
     return p->topo == NULL;
 }
 
+// ve se o pao de cima ja foi colocado
 int pilha_topo_e_z(const Pilha *p) {
     return (p->topo != NULL && p->topo->simbolo == 'z');
 }
 
+// compara a pilha com a receita, topo da pilha com o fim da lista, sem desempilhar
 int pilha_coincide_com_lista(const Pilha *p, const Lista *receita) {
     if (p->tamanho != receita->tamanho)
         return 0;

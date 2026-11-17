@@ -3,11 +3,13 @@
 
 #include "lista.h"
 
+// no da pilha, guarda o simbolo e o prox (o de baixo)
 typedef struct NoPilha {
     char simbolo;
     struct NoPilha *prox;
 } NoPilha;
 
+// pilha do hamburguer, so o topo e acessado
 typedef struct {
     NoPilha *topo;
     int tamanho;
