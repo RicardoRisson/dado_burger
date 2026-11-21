@@ -10,7 +10,7 @@
 #define CFG_VALIDADE_BACON    3   
 
 #ifndef CFG_HASH_M
-#define CFG_HASH_M            1009
+#define CFG_HASH_M            2003
 #endif
 
 #ifndef CFG_COMPARAR_SPLAY
