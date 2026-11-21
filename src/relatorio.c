@@ -41,6 +41,19 @@ int gerar_texto_relatorio(char *buffer, int tamanho){
     p += sprintf(buffer + p, "%-*s%.2f\n", COL_A, "Media de comparacoes por busca:", media(m->avl.comparacoes, m->avl.buscas));
     p += sprintf(buffer + p, "%-*s%.6f s\n\n", COL_A, "Tempo total acumulado:", m->avl.tempo_busca_s);
 
+    // escreve as metricas da splay tree (extra), so se ela foi construida
+    if (m->splay_ativa){
+        p += sprintf(buffer + p, "-- Splay Tree (extra): comparacao com a AVL --\n");
+        p += sprintf(buffer + p, "%-*s%lld\n", COL_A, "Nos inseridos:", m->splay.nos_inseridos);
+        p += sprintf(buffer + p, "%-*s%d\n", COL_A, "Altura resultante:", m->splay.altura);
+        p += sprintf(buffer + p, "%-*s%lld\n", COL_A, "Rotacoes (insercao):", m->splay.rotacoes);
+        p += sprintf(buffer + p, "%-*s%.6f s\n", COL_A, "Tempo de carregamento:", m->splay.tempo_carga_s);
+        p += sprintf(buffer + p, "%-*s%lld\n", COL_A, "Total de buscas:", m->splay.buscas);
+        p += sprintf(buffer + p, "%-*s%lld\n", COL_A, "Total de comparacoes:", m->splay.comparacoes);
+        p += sprintf(buffer + p, "%-*s%.2f\n", COL_A, "Media de comparacoes por busca:", media(m->splay.comparacoes, m->splay.buscas));
+        p += sprintf(buffer + p, "%-*s%.6f s\n\n", COL_A, "Tempo total acumulado:", m->splay.tempo_busca_s);
+    }
+
     // calculates hash hit rate and load factor
     long long consultas = m->hash.hits + m->hash.misses;
     double taxa = 0.0;

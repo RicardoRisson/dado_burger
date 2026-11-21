@@ -4,16 +4,26 @@
 Nos inseridos:                  837253
 Altura resultante:              20
 Rotacoes (insercao):            837233
-Tempo de carregamento:          0.252121 s
+Tempo de carregamento:          0.256781 s
 
 -- Historico: carregamento --
-Entradas carregadas:            100011
+Entradas carregadas:            100001
 
 -- AVL: buscas durante a partida --
 Total de buscas:                1
 Total de comparacoes:           19
 Media de comparacoes por busca: 19.00
 Tempo total acumulado:          0.000010 s
+
+-- Splay Tree (extra): comparacao com a AVL --
+Nos inseridos:                  837253
+Altura resultante:              837253
+Rotacoes (insercao):            0
+Tempo de carregamento:          0.114627 s
+Total de buscas:                1
+Total de comparacoes:           592340
+Media de comparacoes por busca: 592340.00
+Tempo total acumulado:          0.011888 s
 
 -- Tabela hash --
 Tamanho (m):                 1009
@@ -25,6 +35,7 @@ Taxa de acerto:              0.0%
 Total de colisoes:           0
 
 -- Ordenacao do historico (ao acessar Historico) --
-Ainda nao medido (abra a tela Historico).
+Tamanho: 100002 entradas
+Merge Sort:  0.036816 s
 
 ================================

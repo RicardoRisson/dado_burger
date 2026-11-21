@@ -190,8 +190,6 @@ typedef struct {
 
 static Cena g_cena;
 
-/* ---------- sprites do hamburguer ---------- */
-
 // ordem das texturas, o '-' e o pao de baixo
 static const char  CAMADAS[] = "zkmpasqctnob-";
 #define IDX_PAO_BAIXO 12
@@ -533,8 +531,6 @@ static void desenhar_hamburguer(const char *camadas, float cx, float base_y, flo
     }
 }
 
-/* ---------- utilidades de desenho ---------- */
-
 static void texto_centro(const char *t, float cx, float y, int tam, Color c){
     DrawText(t, (int) (cx - (float) MeasureText(t, tam) / 2.0f), (int) y, tam, c);
 }
@@ -616,7 +612,6 @@ static int quebrar_texto(const char *texto, int tam, float largura, char linhas[
     return n;
 }
 
-/* ---------- mudancas da cena (chamadas pelo jogo, so visuais) ---------- */
 
 static void avisar(const char *texto, Color cor){
     snprintf(g_cena.aviso, sizeof g_cena.aviso, "%s", texto);
@@ -656,7 +651,6 @@ static void cena_entregar(int atendidos){
     }
 }
 
-/* ---------- desenho do mapa ---------- */
 
 static void desenhar_cliente(float cx, float cy, float tam, Color cor){
     Rectangle r = { cx - tam / 2.0f, cy - tam / 2.0f, tam, tam };
@@ -874,8 +868,6 @@ static void desenhar_aviso(void){
     }
 }
 
-/* ---------- paineis ---------- */
-
 static void desenhar_coluna_hamburguer(Rectangle r, const char *titulo, const char *camadas){
     painel(r, 10, COR_PAINEL, COR_BORDA);
     texto_centro("HAMBÚRGUER", r.x + r.width / 2.0f, r.y + 14, 20, COR_SUAVE);
@@ -1041,7 +1033,6 @@ static void desenhar_fim(const char *buf){
     texto_centro("Digite seu nome e aperte Enter", cx, r.y + 300, 20, COR_SUAVE);
 }
 
-/* ---------- teclado ---------- */
 
 static double g_t_apagar = 0.0;
 
@@ -1075,7 +1066,6 @@ static void apagar_ultimo(char *buf){
 }
 
 // le o que foi digitado neste frame, devolve 1 quando aperta enter
-// (usa a fila de teclas do raylib pra nao perder tecla apertada e solta no mesmo frame)
 static int teclado_ler(char *buf, int tam){
     int enter = 0;
     double agora = GetTime();
@@ -1118,8 +1108,6 @@ static int apertou_enter_ou_esc(void){
     return sim;
 }
 
-// faz o papel do fgets: desenha a tela ate o jogador apertar enter
-// retorna 0 se a janela foi fechada (que e o "fim da entrada")
 static int ler_linha(char *buf, int tam){
     int limite = tam;
     if (g_cena.resultado != RES_JOGANDO && limite > TAM_MAX_NOME + 1){
@@ -1226,10 +1214,6 @@ static void mostrar_relatorio(void){
         }
     }
 }
-
-/* ==========================================================================
- * JOGO (a logica e a mesma de antes, so os printf viraram coisas na tela)
- * ========================================================================== */
 
 // tira do heap o que vence neste turno ou antes
 static void descartar_vencidos(Estoque *e, int turno){
