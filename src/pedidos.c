@@ -1,10 +1,10 @@
-#include "pedidos.h"
-#include "avl.h"
-#include "splay.h"
-#include "hash.h"
-#include "metricas.h"
-#include "timer.h"
-#include "config.h"
+#include "../include/pedidos.h"
+#include "../include/avl.h"
+#include "../include/splay.h"
+#include "../include/hash.h"
+#include "../include/metricas.h"
+#include "../include/timer.h"
+#include "../include/config.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

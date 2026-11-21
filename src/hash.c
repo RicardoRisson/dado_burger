@@ -1,4 +1,4 @@
-#include "hash.h"
+#include "../include/hash.h"
 #include <stdlib.h>
 
 // funcao de hash por divisao: resto da chave por m (o + m garante que nunca da negativo)

@@ -1,9 +1,9 @@
-#include "ordenacao.h"
-#include "historico.h"
-#include "metricas.h"
-#include "relatorio.h"
-#include "timer.h"
-#include "config.h"
+#include "../include/ordenacao.h"
+#include "../include/historico.h"
+#include "../include/metricas.h"
+#include "../include/relatorio.h"
+#include "../include/timer.h"
+#include "../include/config.h"
 #include <stdlib.h>
 
 // converts uppercase letter to lowercase

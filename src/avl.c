@@ -1,5 +1,5 @@
-#include "avl.h"
-#include "timer.h"
+#include "../include/avl.h"
+#include "../include/timer.h"
 #include <stdlib.h>
 
 // returns the larger of two numbers

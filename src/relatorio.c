@@ -1,6 +1,6 @@
-#include "relatorio.h"
-#include "metricas.h"
-#include "ordenacao.h"
+#include "../include/relatorio.h"
+#include "../include/metricas.h"
+#include "../include/ordenacao.h"
 #include <stdio.h>
 
 // column widths for aligning report labels

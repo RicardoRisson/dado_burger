@@ -1,4 +1,4 @@
-#include "lista.h"
+#include "../include/lista.h"
 #include <stdlib.h>
 
 // cria a lista vazia 

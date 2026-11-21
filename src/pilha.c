@@ -1,4 +1,4 @@
-#include "pilha.h"
+#include "../include/pilha.h"
 
 #include <stdlib.h>
 

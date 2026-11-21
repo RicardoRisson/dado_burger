@@ -1,5 +1,5 @@
-#include "historico.h"
-#include "metricas.h"
+#include "../include/historico.h"
+#include "../include/metricas.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

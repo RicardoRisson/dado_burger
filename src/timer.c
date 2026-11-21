@@ -1,4 +1,4 @@
-#include "timer.h"
+#include "../include/timer.h"
 
 void timer_iniciar(Timer *t) { t->inicio = clock(); }
 double timer_parar(Timer *t) {

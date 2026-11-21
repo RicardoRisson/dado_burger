@@ -1,5 +1,5 @@
-#include "splay.h"
-#include "timer.h"
+#include "../include/splay.h"
+#include "../include/timer.h"
 #include <stdlib.h>
 
 // rotates tree branch right

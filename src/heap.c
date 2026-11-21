@@ -1,4 +1,4 @@
-#include "heap.h"
+#include "../include/heap.h"
 
 // desce o no i ate o menor filho ser maior que ele
 void heapify(int a[], int n, int i){
