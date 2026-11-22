@@ -38,7 +38,7 @@ int gerar_texto_relatorio(char *buffer, int tamanho){
     p += sprintf(buffer + p, "-- AVL: buscas durante a partida --\n");
     p += sprintf(buffer + p, "%-*s%lld\n", COL_A, "Total de buscas:", m->avl.buscas);
     p += sprintf(buffer + p, "%-*s%lld\n", COL_A, "Total de comparacoes:", m->avl.comparacoes);
-    p += sprintf(buffer + p, "%-*s%.2f\n", COL_A, "Media de comparacoes por busca:", media(m->avl.comparacoes, m->avl.buscas));
+    p += sprintf(buffer + p, "%-*s%.6f\n", COL_A, "Media de comparacoes por busca:", media(m->avl.comparacoes, m->avl.buscas));
     p += sprintf(buffer + p, "%-*s%.6f s\n\n", COL_A, "Tempo total acumulado:", m->avl.tempo_busca_s);
 
     // escreve as metricas da splay tree (extra), so se ela foi construida
@@ -50,7 +50,7 @@ int gerar_texto_relatorio(char *buffer, int tamanho){
         p += sprintf(buffer + p, "%-*s%.6f s\n", COL_A, "Tempo de carregamento:", m->splay.tempo_carga_s);
         p += sprintf(buffer + p, "%-*s%lld\n", COL_A, "Total de buscas:", m->splay.buscas);
         p += sprintf(buffer + p, "%-*s%lld\n", COL_A, "Total de comparacoes:", m->splay.comparacoes);
-        p += sprintf(buffer + p, "%-*s%.2f\n", COL_A, "Media de comparacoes por busca:", media(m->splay.comparacoes, m->splay.buscas));
+        p += sprintf(buffer + p, "%-*s%.6f\n", COL_A, "Media de comparacoes por busca:", media(m->splay.comparacoes, m->splay.buscas));
         p += sprintf(buffer + p, "%-*s%.6f s\n\n", COL_A, "Tempo total acumulado:", m->splay.tempo_busca_s);
     }
 
@@ -69,10 +69,10 @@ int gerar_texto_relatorio(char *buffer, int tamanho){
     p += sprintf(buffer + p, "-- Tabela hash --\n");
     p += sprintf(buffer + p, "%-*s%d\n", COL_H, "Tamanho (m):", m->hash.m);
     p += sprintf(buffer + p, "%-*s%d\n", COL_H, "Entradas ocupadas (n):", m->hash.n);
-    p += sprintf(buffer + p, "%-*s%.2f\n", COL_H, "Fator de carga (lambda):", lambda);
+    p += sprintf(buffer + p, "%-*s%.6f\n", COL_H, "Fator de carga (lambda):", lambda);
     p += sprintf(buffer + p, "%-*s%lld\n", COL_H, "Total de hits:", m->hash.hits);
     p += sprintf(buffer + p, "%-*s%lld\n", COL_H, "Total de misses:", m->hash.misses);
-    p += sprintf(buffer + p, "%-*s%.1f%%\n", COL_H, "Taxa de acerto:", taxa);
+    p += sprintf(buffer + p, "%-*s%.6f%%\n", COL_H, "Taxa de acerto:", taxa);
     p += sprintf(buffer + p, "%-*s%lld\n\n", COL_H, "Total de colisoes:", m->hash.colisoes);
 
     // writes history sorting metrics if measured
