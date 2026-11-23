@@ -1,0 +1,18 @@
+FILA.C
+
+fila.c lida com a FILA de clientes, o fila_inicializar inicializa ela, fila_vazia é um dos elementos principais do jogo, 
+é usado num while no jogo.c (!fila_vazia(&fila) && !derrota && !saiu) e basicamente deixa a partida continuar se
+ainda tiver gente na fila, o fila_sair quando o hambuguer coincide com o gabarito é chamada, o fila_frente é meio confuso
+mas basicamente ele pega o cliente do atendimento atual e sorteia o pedido dele, busca a receita (função get_pedido, que 
+fica no pedidos.c, recebe o código sorteado e devolve o pedido com a receita dele) e grava em cliente->codigo e 
+cliente->receita, por isso que ela devolve, a modificação vai direto no nó da fila, esse ponteiro também sofre o 
+cliente->paciencia-- a cada turno, se zerar, é derrpta, o fila_destruir destroi a fila no fim do jogo, seja derrota, sair, ou 
+vitoria
+tamanho não é uma função, mas é bom lembrar que ele é lido direto em cena_iniciar (fila->tamanho) para a parte visual saber quantos clientes desenhar na fila
+
+FILA.H
+A struct cliente guarda o numero do pedido a receita e paciencia
+typedef struct NoFila NoFila é só pra a struct poder apontar p ela mesma
+struct NoFila guarda o cliente que esta guardado la e o ponteiro pro prox cliente
+struct fila tem um ponteiro pro cliente que esta sendo atendido, um ponteiro pro ultimo nó onde o fila_entrar coloca, sem percorrer
+e o tamanho, no caso, quantos clientes que tem na lista, pra saber tudo em O(1) e não ter q percorrer a lista
