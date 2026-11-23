@@ -55,9 +55,10 @@ apontar pro fim antigo, o if ve se a lista já tinha nó, se sim o o antigo ulti
 também vira o ini. No fim fim = novo e tamanho++. como el eguarda o ponteiro fim é O(1), não precisa percorrer a lista, quem chama é o
 receita_para_lista em um for que passa por cada char da string do pedido e insere um por um, na ordem, de baixo pra cima
 
-destruir libera todos os nós. Começa no ini, e a cada volta guarda o prox antes do free pra não perder o resto da lista, depois zera ini, fim e tamanho. O jogo.c chama no fim do atendimento de cada cliente, junto com o pilha_destruir, seja o pedido concluído, derrota ou sair. Obs: o nome é só destruir (sem prefixo lista_), por isso a pilha usa pilha_destruir pra não colidir.
+o destruir libera os nós, começando pelo ini, a cada volta ele guarda o prox antes de fazer free senao perde acesso ao resto da lista, depois zera o ini fim e tamanho, no jogo.C chama
+isso no fim de cada atendimento, junto com pilha_destruir, mesmo sendo pedido concuido, derrota, ou sair,.
 
-ISTA.H
+LISTA.H
 
 char simbolo: o ingrediente daquela posição da receita, por exemplo 'n' pra carne ou 'z' pro pão de cima.
 struct NoLista *prox: ponteiro pro nó seguinte (a próxima camada pra cima). No último nó é NULL.
@@ -67,4 +68,19 @@ NoLista *ini: ponteiro pro primeiro nó (o ingrediente de baixo da receita).
 NoLista *fim: ponteiro pro último nó (o ingrediente de cima, normalmente o 'z'). É por ele que o inserirFim insere em O(1) e que o pilha_coincide_com_lista começa a comparar.
 int tamanho: quantos ingredientes tem a receita, pra consultar em O(1). É comparado com pilha->tamanho logo no começo do pilha_coincide_com_lista, que já retorna 0 se forem diferentes.
 
-Observação: o lista.h não tem #include nenhum, e quem inclui ele é o pilha.h. O pilha.h precisa dele porque pilha_coincide_com_lista recebe uma Lista.
+======
+
+HASH.C
+
+hashDivisao e indice_do_codigo transformam o codigo do pedido numa posição da tabela que é o resto da divisão por M, hash_inicializar: cria a tabela vazia com m posições e zera os
+ contadores Roda uma vez, ao carregar os pedidos, hash_buscar responde "esse pedido já foi buscado antes?". Se está na lista da posição, devolve o pedido e conta um hit. Se não,
+  conta um miss e devolve 0 (oque geralmente acontece). já o hash_insrir guarda um novo pdido no inicio da lista da opsição e soma 1 em n. se ja tinha algum pedido conta uma
+  colisao, quem chama usa dps de um miss, com o pedido que veioda avl, o hash_destruir libera todos os nodos quando o programa termina
+
+HASH.h
+
+NoHash: um nó com o pedido (código e receita) e o ponteiro para o próximo nó da lista.
+TabelaHash: um vetor de m posições, cada uma com uma lista de NoHash (encadeamento separado). Guarda também o ponteiro met, que aponta para os contadores do relatório.
+As quatro declarações são as operações da tabela: inicializar, buscar, inserir e destruir.
+
+=====
