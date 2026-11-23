@@ -16,3 +16,33 @@ typedef struct NoFila NoFila é só pra a struct poder apontar p ela mesma
 struct NoFila guarda o cliente que esta guardado la e o ponteiro pro prox cliente
 struct fila tem um ponteiro pro cliente que esta sendo atendido, um ponteiro pro ultimo nó onde o fila_entrar coloca, sem percorrer
 e o tamanho, no caso, quantos clientes que tem na lista, pra saber tudo em O(1) e não ter q percorrer a lista
+
+======
+
+PILHA.c
+pilha_inicializar deixa a pilha vazia, com topo = NULL e tamanho = 0, o jogo.c chama quando chega cliente novo, prato começa
+vazio (na pratica com um pao em baixo)
+pilha_empilhar, coloca um ingreditente no topo, guarda o simbolo e faz o novo->prox apontar pro topo antigo, atualiza o topo 
+para o nó e incrementa o tamanho
+pilha_desempilha tira o ingrediente do topo devolvendo o simbolo, guarda o nó do topo (alvo) e o simbolo, move topo pra baixo do nó
+da free no nodo removido e decrementa o tamanho
+pilha_tamanho e pilha_vazia: retornam o tamanho e se topo == NULL, respectivamente.
+pilha_topo_e_z retorna 1 caso a pilha nao esteja vazia e nem, é usado no acao_adicionar pra impedir de por coisa em cima do z
+e no fim do turno tmb e usado pra considerar o hambuerger como concluido
+pilha_coincide_com_lista compara o hamburguer montado com a receita do cliente, sem desempilhar, se o tamanho for diferente já retorna 0
+percorre a pilha do topo pra baixo (prox) e a lista do fim pro começo (ant), isso é intencional pois o ultimo ingrediente empilhado 
+corresponde ao ultimo da receita, como a pilha só é lida, nada é destruido, se chegar no fim sem nada diferente retorn 1
+caso contrario retorna 0
+
+isso é usado no jogo.c:
+quando o jogo cria a Lista receita e uma Pilha prato vazia, ai ele escolhe uma açao como p,a,r,s, depois da ação se 
+pilha_topo_e_z && pilha_coincide_com_lista o pedido esta pronto e o cliente nao perde 1 de paciencia, ao terminar, o pilha_destruir
+e o destruir(&receita) liberam memoria
+
+PILHA.H
+char simbolo: o ingrediente daquela camada, por exemplo 'n' para carne ou 'z' para pão de cima.
+struct NoPilha *prox: ponteiro para o nó que está embaixo desse. Na pilha, "próximo" significa a camada de baixo. Na camada mais de baixo, prox é NULL
+NoPilha *topo é o ponteiro da camada de cima, é só por ele que acessa a coias
+int tamanho tamanho atual da pilha, pra as coisas ficarem o(1)
+
+======

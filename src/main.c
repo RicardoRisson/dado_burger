@@ -33,8 +33,6 @@
 #define COR_JOGADOR   (Color){ 246, 146,  30, 255 }
 #define COR_JOGADOR_E (Color){ 180,  92,   8, 255 }
 
-/* ---------- utilidades de desenho e teclado (so visual) ---------- */
-
 typedef struct {
     Rectangle   r;
     const char *tecla;   // o que seria digitado no terminal
@@ -157,7 +155,6 @@ static void apagar_ultimo(char *buf){
 }
 
 // le o que foi digitado neste frame, devolve 1 quando aperta enter
-// (usa a fila de teclas do raylib pra nao perder tecla apertada e solta no mesmo frame)
 static int teclado_ler(char *buf, int tam){
     int enter = 0;
     double agora = GetTime();
@@ -200,8 +197,6 @@ static int apertou_enter_ou_esc(void){
     return sim;
 }
 
-// faz o papel do fgets: desenha a tela ate digitar algo + enter (ou clicar num botao)
-// retorna 0 se a janela foi fechada (o "fim da entrada")
 static int ler_linha(char *buf, int tam, void (*desenhar)(const char *buf), const Botao *botoes, int nb){
     buf[0] = '\0';
     while (!WindowShouldClose()){
@@ -224,7 +219,6 @@ static int ler_linha(char *buf, int tam, void (*desenhar)(const char *buf), cons
     return 0;
 }
 
-// espera enter (ou esc/clique) pra sair de uma tela
 static void esperar_enter(void (*desenhar)(void)){
     while (!WindowShouldClose()){
         BeginDrawing();
@@ -272,7 +266,6 @@ static void desenhar_enfeite(void){
     desenhar_cliente(1159, 455, 28);
 }
 
-/* ---------- telas ---------- */
 
 static void tela_carregando(void){
     // dois frames pra garantir que aparece antes da carga pesada
@@ -308,7 +301,6 @@ static void desenhar_menu(const char *buf){
                  LARGURA_TELA / 2.0f, 680, 10, COR_SUAVE);
 }
 
-// um "chip" com a cor e o nome, devolve o x do proximo
 static float chip(float x, float y, Color cor, const char *texto){
     DrawRectangle((int) x, (int) y + 2, 16, 16, (Color){ (unsigned char) (cor.r * 0.7f), (unsigned char) (cor.g * 0.7f), (unsigned char) (cor.b * 0.7f), 255 });
     DrawRectangle((int) x + 2, (int) y + 4, 12, 12, cor);
