@@ -19,7 +19,7 @@ e o tamanho, no caso, quantos clientes que tem na lista, pra saber tudo em O(1) 
 
 ======
 
-PILHA.c
+PILHA.C
 pilha_inicializar deixa a pilha vazia, com topo = NULL e tamanho = 0, o jogo.c chama quando chega cliente novo, prato começa
 vazio (na pratica com um pao em baixo)
 pilha_empilhar, coloca um ingreditente no topo, guarda o simbolo e faz o novo->prox apontar pro topo antigo, atualiza o topo 
@@ -46,3 +46,25 @@ NoPilha *topo é o ponteiro da camada de cima, é só por ele que acessa a coias
 int tamanho tamanho atual da pilha, pra as coisas ficarem o(1)
 
 ======
+
+LISTA.C
+ela é, basicamente um gabarito para a montagem, é a lista dos ingreditentes, inicializar deixa ela vazia, com ini e fim = NULL e tamanho = 0
+ela nao é chamada diretamente no jogo.c, é chamada dentro de receita_para_lista (pedidos.c), que AI SIM o jogo.c usa quando o cliente da frente 
+é atendido. o inserirFim coloca um ingrediente no final, aloca o novo nó, gaurda o simbolo e faz novo->prox = NULL ele é o ultimo e novo->ant
+apontar pro fim antigo, o if ve se a lista já tinha nó, se sim o o antigo ultimo passa a apontar pro novo fim->prox = novo, se não o novo
+também vira o ini. No fim fim = novo e tamanho++. como el eguarda o ponteiro fim é O(1), não precisa percorrer a lista, quem chama é o
+receita_para_lista em um for que passa por cada char da string do pedido e insere um por um, na ordem, de baixo pra cima
+
+destruir libera todos os nós. Começa no ini, e a cada volta guarda o prox antes do free pra não perder o resto da lista, depois zera ini, fim e tamanho. O jogo.c chama no fim do atendimento de cada cliente, junto com o pilha_destruir, seja o pedido concluído, derrota ou sair. Obs: o nome é só destruir (sem prefixo lista_), por isso a pilha usa pilha_destruir pra não colidir.
+
+ISTA.H
+
+char simbolo: o ingrediente daquela posição da receita, por exemplo 'n' pra carne ou 'z' pro pão de cima.
+struct NoLista *prox: ponteiro pro nó seguinte (a próxima camada pra cima). No último nó é NULL.
+struct NoLista *ant: ponteiro pro nó anterior (a camada de baixo). No primeiro nó é NULL. É o que permite percorrer de trás pra frente.
+typedef struct NoLista NoLista tem o nome duas vezes porque dentro da struct o apelido ainda não existe, então o ponteiro precisa de struct NoLista *.
+NoLista *ini: ponteiro pro primeiro nó (o ingrediente de baixo da receita).
+NoLista *fim: ponteiro pro último nó (o ingrediente de cima, normalmente o 'z'). É por ele que o inserirFim insere em O(1) e que o pilha_coincide_com_lista começa a comparar.
+int tamanho: quantos ingredientes tem a receita, pra consultar em O(1). É comparado com pilha->tamanho logo no começo do pilha_coincide_com_lista, que já retorna 0 se forem diferentes.
+
+Observação: o lista.h não tem #include nenhum, e quem inclui ele é o pilha.h. O pilha.h precisa dele porque pilha_coincide_com_lista recebe uma Lista.
