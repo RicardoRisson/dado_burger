@@ -183,10 +183,6 @@ void pedidos_iniciar_partida(void) {
     g_metricas.splay.tempo_busca_s = 0.0;
     g_metricas.splay.rotacoes_busca = 0;
 
-    // resets the hash counters for each match (cache entries do not persist)
-    g_metricas.hash.hits = 0;
-    g_metricas.hash.misses = 0;
-    g_metricas.hash.colisoes = 0;
 }
 
 // converts recipe text into a list
