@@ -100,3 +100,37 @@ quantidade desse ingrediente no estoque que o jogador vê.
 As seis declarações são as operações: duas internas (heapify e siftUp) e as três que o jogo usa (fpInserir, fpMinimo e fpRemoverMinimo)
 
 =====
+LINHAS RELEVANTES DO MAIN:
+
+489–496	Os nomes dos arquivos vêm de argv[1] e argv[2], e o programa não assume nome fixo. Sem os dois, mostra o uso e sai.
+508–513	carregar_pedidos carrega os pedidos na AVL antes de o menu aparecer. Se o arquivo não abre, mostra o erro e sai.
+515	carregar_historico carrega o histórico na lista contígua, também antes do menu.
+518	registrar_log_carregamento grava no medicoes.log as métricas da carga: nós, altura, rotações e tempo da AVL, e quantas entradas do histórico.
+522–534	Laço do menu: a opção 1 chama jogo_executar (530), onde ficam fila, pilha, lista e heap; a 3 abre o histórico (534).
+458–464	A escolha do jogador (1 ou 2) vira o critério de ordenação: por nome ou por pontuação decrescente.
+466–469	ordenar_historico é a linha principal do histórico. Ordena uma cópia da lista com merge sort, então o original e o historico.txt não são alterados. Devolve a cópia ordenada, o tamanho e o tempo medido só do algoritmo.
+471–475	A ordenação é feita sobre todas as entradas, e a tela só mostra as 20 primeiras (HIST_MOSTRAR, linha 15).
+445–447	A tela mostra quantas entradas foram ordenadas, o nome do algoritmo e o tempo. É a medição de ordenação do relatório.
+484	liberar_copia_ordenada libera a cópia depois da tela. A lista original continua na memória.
+538–539	Ao sair, liberar_historico e liberar_pedidos liberam a memória das estruturas.
+=====
+LINHAS RELEVANTES DO JOGO.c
+
+18–28	O estoque é um contador para cada perene (sqct) e um heap para cada perecível (nob). Os infinitos não têm estoque.
+1332	pedidos_iniciar_partida zera as métricas de busca da partida.
+1334–1342	Fila: fila_entrar põe os clientes, cada um com paciência máxima.
+1359	fila_frente: só o cliente da frente é atendido.
+1361–1364	get_pedido(sortear_codigo_pedido()) busca a receita primeiro no hash; se não achar, busca na AVL e insere no hash.
+1366–1369	receita_para_lista guarda a receita numa lista encadeada. pilha_inicializar cria o prato, que é a pilha.
+1373 e 1219–1225	No início de cada turno, descartar_vencidos tira do heap o que tem validade ≤ turno atual.
+1279	Preparar um perecível faz fpInserir(turno + validade).
+1288	Adicionar é recusado se o topo da pilha já é o pão de cima.
+1313	Adicionar perecível faz fpRemoverMinimo, então usa o que vence primeiro.
+1294, 1304, 1314	Os três caminhos de adicionar terminam em pilha_empilhar.
+1326	Remover faz pilha_desempilhar (só o topo sai).
+1414–1422	Fim da ação: turno++. Se o topo é pão e a pilha bate com a lista (pilha_coincide_com_lista), o pedido está pronto. Senão a paciência cai 1 e, se chega a 0, é derrota.
+1428–1432	Pedido pronto: fila_sair e o próximo cliente passa à frente.
+1444	fila_destruir libera a fila.
+1450–1451	adicionar_historico grava o nome e a pontuação. exibir_e_gravar_relatorio_final escreve o relatório e o medicoes.log.
+
+=====
