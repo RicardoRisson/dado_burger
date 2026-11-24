@@ -84,3 +84,19 @@ TabelaHash: um vetor de m posições, cada uma com uma lista de NoHash (encadeam
 As quatro declarações são as operações da tabela: inicializar, buscar, inserir e destruir.
 
 =====
+
+HEAP.c
+
+fpinserir guarda uma nova unidade no estoque, roda qundo o user prepara um alimento perecivel, o valor guardado é o turno de vencimento, que é validade + turno de preparo, já o fpMinimo
+olha a unidade q vence primeiro serve para conferir, no início de cada turno, se a do topo já venceu, fpRemoverMinimo tira do estoque a unidade a vencer primeiro tem dois usos, "deletar"
+uma unidade vencida ou colocar o perecivel no hambuerger, por comodidade usa sempre a mais velha, depois de uma inserção faz um siftup, no caso, sobe o valor novo até ficar abaixo 
+do que vence depois dele. É o que mantém a menor validade no topo. depois de uma remoção, faz um heapify desce o valor que foi colocado na raiz até o lugar certo
+Também mantém o menor valor no topo.
+
+HEAP.H
+
+Heap: um vetor dados com os turnos de vencimento e um contador tam com quantas unidades há. O vetor tem tamanho fixo, CFG_HEAP_CAP (3), vindo do config.h. O tam também é a 
+quantidade desse ingrediente no estoque que o jogador vê. 
+As seis declarações são as operações: duas internas (heapify e siftUp) e as três que o jogo usa (fpInserir, fpMinimo e fpRemoverMinimo)
+
+=====
