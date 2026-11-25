@@ -2,6 +2,8 @@
 #define ORDENACAO_H
 
 #include "tipos.h"
+#include "historico.h"
+#include "metricas.h"
 
 // sorting option constants
 #define ORDENAR_POR_NOME      0
@@ -12,9 +14,9 @@ typedef struct {
     int tipo;
 } CriterioOrdenacao;
 
-// returns a sorted copy of history entries
-void ordenar_historico(CriterioOrdenacao criterio, EntradaHistorico **copia_out,
-                       int *n_out, double *tempo_out);
+// returns a sorted copy of history entries and the time it took
+void ordenar_historico(CriterioOrdenacao criterio, const Historico *historico, Metricas *metricas,
+                       EntradaHistorico **copia_out, int *n_out, double *tempo_out);
 
 // frees memory used by the sorted copy
 void liberar_copia_ordenada(EntradaHistorico *copia);

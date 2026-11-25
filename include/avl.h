@@ -27,6 +27,10 @@ int avl_inserir(ArvoreAVL *a, const Pedido *p);
 // searches by code, returns a pointer to the order or NULL
 const Pedido* avl_buscar(ArvoreAVL *a, int codigo);
 
+// returns the smallest and the biggest order code in the tree (empty = 0)
+int avl_codigo_menor(const ArvoreAVL *a);
+int avl_codigo_maior(const ArvoreAVL *a);
+
 // returns the height (empty = 0, only root = 1)
 int avl_altura(const ArvoreAVL *a);
 

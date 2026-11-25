@@ -157,6 +157,26 @@ const Pedido* avl_buscar(ArvoreAVL *a, int codigo) {
     return achou;
 }
 
+// returns the smallest order code (leftmost node)
+int avl_codigo_menor(const ArvoreAVL *a) {
+    const NoAVL *no = a->raiz;
+    if (no == NULL)
+        return 0;
+    while (no->esq != NULL)
+        no = no->esq;
+    return no->pedido.codigo;
+}
+
+// returns the biggest order code (rightmost node)
+int avl_codigo_maior(const ArvoreAVL *a) {
+    const NoAVL *no = a->raiz;
+    if (no == NULL)
+        return 0;
+    while (no->dir != NULL)
+        no = no->dir;
+    return no->pedido.codigo;
+}
+
 // returns total height of the tree
 int avl_altura(const ArvoreAVL *a) {
     return altura_no(a->raiz);

@@ -20,7 +20,6 @@ void pilha_inicializar(Pilha *p);
 void pilha_empilhar(Pilha *p, char simbolo);
 char pilha_desempilhar(Pilha *p);
 
-int pilha_tamanho(const Pilha *p);
 int pilha_vazia(const Pilha *p);
 
 int pilha_topo_e_z(const Pilha *p);

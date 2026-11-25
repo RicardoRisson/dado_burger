@@ -1,10 +1,9 @@
 #include "../include/ordenacao.h"
-#include "../include/historico.h"
-#include "../include/metricas.h"
 #include "../include/relatorio.h"
 #include "../include/timer.h"
 #include "../include/config.h"
 #include <stdlib.h>
+#include <string.h>
 
 // converts uppercase letter to lowercase
 static char minuscula(char c){
@@ -94,17 +93,14 @@ static void merge_sort(EntradaHistorico *v, int n, FuncaoComparar cmp){
     free(aux);
 }
 
-// creates a sorted copy of history entries
-void ordenar_historico(CriterioOrdenacao criterio, EntradaHistorico **copia_out,
-                       int *n_out, double *tempo_out){
-    int n;
-    const EntradaHistorico *original = obter_entradas_historico(&n);
+// creates a sorted copy of history entries and measures the sorting time
+void ordenar_historico(CriterioOrdenacao criterio, const Historico *historico, Metricas *metricas,
+                       EntradaHistorico **copia_out, int *n_out, double *tempo_out){
+    int n = historico->total;
 
     // makes space and copies original entries
     EntradaHistorico *copia = malloc((size_t) n * sizeof(EntradaHistorico));
-    for (int i = 0; i < n; i++){
-        copia[i] = original[i];
-    }
+    memcpy(copia, historico->entradas, (size_t) n * sizeof(EntradaHistorico));
 
     // picks comparison rule based on sort type
     FuncaoComparar cmp = comparar_pontuacao;
@@ -116,17 +112,10 @@ void ordenar_historico(CriterioOrdenacao criterio, EntradaHistorico **copia_out,
     merge_sort(copia, n, cmp);
     double segundos = timer_parar(&t);
 
-    // updates sorting metrics and best time
-    MetricasOrdenacao *mo = &g_metricas.ordenacao;
-    int c = criterio.tipo;
-    mo->medicoes[c]++;
-    mo->ultimo_tempo_s[c] = segundos;
-    mo->n_entradas[c] = n;
-    if (mo->medicoes[c] == 1 || segundos < mo->melhor_tempo_s[c]){
-        mo->melhor_tempo_s[c] = segundos;
-    }
-
-    atualizar_log_ordenacao(CFG_ARQUIVO_LOG, segundos, n); // writes sort stats to log file
+    // updates sorting metrics and writes them to the log file
+    metricas->ordenacao.ultimo_tempo_geral_s = segundos;
+    metricas->ordenacao.ultimo_n_geral = n;
+    gravar_relatorio_log(CFG_ARQUIVO_LOG, metricas);
 
     // returns sorted copy count and elapsed time
     *copia_out = copia;

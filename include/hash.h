@@ -1,26 +1,27 @@
 #ifndef HASH_H
 #define HASH_H
-#include "tipos.h"
-#include "metricas.h"
 
-// struct que guarda o prox e o dado do pedido
+// struct que guarda a chave, o valor e o prox
 typedef struct NoHash {
-    Pedido  pedido;
+    int chave;
+    int valor;
     struct NoHash *prox;
 } NoHash;
 
-// struct da tabela hash, cada slot guarda uma lista de pedido
+// struct da tabela hash, cada slot guarda uma lista encadeada
 typedef struct {
-    NoHash       **slots;
-    int            m;
-    MetricasHash  *met;
+    NoHash **slots;
+    int      m;   
+    int      n;   
 } TabelaHash;
 
-void hash_inicializar(TabelaHash *t, int m, MetricasHash *met);
+void hash_inicializar(TabelaHash *t, int m);
 
-int hash_buscar(TabelaHash *t, int codigo, Pedido *pedido_out);
+void hash_inserir(TabelaHash *t, int chave, int valor);
 
-void hash_inserir(TabelaHash *t, const Pedido *p);
+int hash_buscar(const TabelaHash *t, int chave);
+
+int hash_houve_colisao(const TabelaHash *t, int chave);
 
 void hash_destruir(TabelaHash *t);
 

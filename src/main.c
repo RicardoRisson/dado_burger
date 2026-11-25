@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <time.h>
 #include "raylib.h"
 #include "../include/pedidos.h"
 #include "../include/historico.h"
@@ -197,11 +198,11 @@ static int apertou_enter_ou_esc(void){
     return sim;
 }
 
-static int ler_linha(char *buf, int tam, void (*desenhar)(const char *buf), const Botao *botoes, int nb){
+static int ler_linha(char *buf, int tam, void (*desenhar)(const char *buf, const Metricas *metricas), const Metricas *metricas, const Botao *botoes, int nb){
     buf[0] = '\0';
     while (!WindowShouldClose()){
         BeginDrawing();
-        desenhar(buf);
+        desenhar(buf, metricas);
         EndDrawing();
         // le depois de desenhar pra nao pegar o enter/clique da tela anterior
         if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
@@ -285,7 +286,7 @@ static const Botao BOTOES_MENU[4] = {
     { { 440, 428, 400, 54 }, "0", "Sair"       },
 };
 
-static void desenhar_menu(const char *buf){
+static void desenhar_menu(const char *buf, const Metricas *metricas){
     ClearBackground(COR_FUNDO);
     desenhar_enfeite();
     texto_centro("DADO BURGER", LARGURA_TELA / 2.0f + 4, 84, 60, COR_TEXTO);
@@ -297,7 +298,7 @@ static void desenhar_menu(const char *buf){
     desenhar_caixa_texto((Rectangle){ 440, 512, 400, 52 }, buf);
     texto_centro("Digite a opção e aperte Enter, ou clique", LARGURA_TELA / 2.0f, 578, 20, COR_SUAVE);
     texto_centro(TextFormat("%lld pedidos carregados  |  %d entradas no histórico",
-                            g_metricas.avl.nos_inseridos, g_metricas.historico.entradas_carregadas),
+                            metricas->avl.nos_inseridos, metricas->historico.entradas_carregadas),
                  LARGURA_TELA / 2.0f, 680, 10, COR_SUAVE);
 }
 
@@ -390,7 +391,8 @@ static const Botao BOTOES_HIST[2] = {
     { { 420, 354, 440, 54 }, "2", "Pontuação decrescente" },
 };
 
-static void desenhar_escolha_historico(const char *buf){
+static void desenhar_escolha_historico(const char *buf, const Metricas *metricas){
+    (void) metricas;
     ClearBackground(COR_FUNDO);
     painel((Rectangle){ 340, 140, 600, 440 }, 14, COR_PAINEL, COR_BORDA);
     texto_centro("HISTÓRICO", LARGURA_TELA / 2.0f, 170, 40, COR_LARANJA);
@@ -449,10 +451,10 @@ static void desenhar_lista_historico(void){
 }
 
 // ordena uma copia do historico e mostra so os primeiros
-static void tela_historico(void){
+static void tela_historico(const Historico *historico, Metricas *metricas){
     char linha[TAM_ENTRADA];
     int escolha = 0;
-    if (!ler_linha(linha, TAM_ENTRADA, desenhar_escolha_historico, BOTOES_HIST, 2)){
+    if (!ler_linha(linha, TAM_ENTRADA, desenhar_escolha_historico, metricas, BOTOES_HIST, 2)){
         return;
     }
     sscanf(linha, "%d", &escolha);
@@ -466,7 +468,7 @@ static void tela_historico(void){
     EntradaHistorico *copia;
     int n;
     double tempo;
-    ordenar_historico(criterio, &copia, &n, &tempo);
+    ordenar_historico(criterio, historico, metricas, &copia, &n, &tempo);
 
     // n pode ser maior que o limite da tela
     int mostrados = n;
@@ -486,6 +488,7 @@ static void tela_historico(void){
 
 // carrega pedidos e historico dos argumentos e abre o menu
 int main(int argc, char *argv[]){
+    srand(time(NULL));
     if (argc < 3){
         fprintf(stderr, "Uso: %s <arquivo_pedidos> <arquivo_historico>\n",
                 argv[0]);
@@ -494,6 +497,15 @@ int main(int argc, char *argv[]){
 
     const char *arq_pedidos   = argv[1];
     const char *arq_historico = argv[2];
+
+    // tudo que o jogo usa fica aqui e e passado por parametro
+    Metricas    metricas;
+    ArvoreAVL   avl;
+    ArvoreSplay splay;
+    TabelaHash  hash;
+    Historico   historico;
+    memset(&metricas, 0, sizeof metricas);
+    memset(&historico, 0, sizeof historico);
 
     SetTraceLogLevel(LOG_WARNING);
     InitWindow(LARGURA_TELA, ALTURA_TELA, "Dado Burger");
@@ -505,38 +517,43 @@ int main(int argc, char *argv[]){
     SetTargetFPS(60);
     tela_carregando();
 
-    if (!carregar_pedidos(arq_pedidos)){
+    if (!carregar_pedidos(arq_pedidos, &avl, &splay, &metricas)){
         fprintf(stderr, "Erro: nao foi possivel carregar '%s'\n",
                 arq_pedidos);
         CloseWindow();
         return 1;
     }
 
-    carregar_historico(arq_historico);
+    carregar_historico(arq_historico, &historico, &metricas);
+
+    // a hash comeca vazia, e recriada a cada partida
+    hash_inicializar(&hash, CFG_HASH_M);
+    metricas.hash.m = hash.m;
 
     // grava no log as metricas do carregamento
-    registrar_log_carregamento(CFG_ARQUIVO_LOG);
+    registrar_log_carregamento(CFG_ARQUIVO_LOG, &metricas);
 
     char linha[TAM_ENTRADA];
     int opcao = -1;
     while (opcao != 0){
-        if (!ler_linha(linha, TAM_ENTRADA, desenhar_menu, BOTOES_MENU, 4)){
+        if (!ler_linha(linha, TAM_ENTRADA, desenhar_menu, &metricas, BOTOES_MENU, 4)){
             break;
         }
         opcao = -1;
         sscanf(linha, "%d", &opcao);
 
         if (opcao == 1){
-            jogo_executar();
+            jogo_executar(&avl, &splay, &hash, &historico, &metricas);
         }else if (opcao == 2){
             tela_como_jogar();
         }else if (opcao == 3){
-            tela_historico();
+            tela_historico(&historico, &metricas);
         }
     }
 
-    liberar_historico();
-    liberar_pedidos();
+    liberar_historico(&historico);
+    hash_destruir(&hash);
+    liberar_pedidos(&avl, &splay);
     CloseWindow();
     return 0;
 }

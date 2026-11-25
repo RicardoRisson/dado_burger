@@ -1,26 +1,16 @@
 #include "../include/historico.h"
-#include "../include/metricas.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #define CAPACIDADE_INICIAL 1024
 #define TAM_LINHA          256
-#define TAM_CAMINHO        1024
-
-// stores history entries and list size
-static EntradaHistorico *g_entradas   = NULL;
-static int               g_total      = 0;
-static int               g_capacidade = 0;
-
-// stores path to the history file
-static char g_caminho[TAM_CAMINHO] = "";
 
 // doubles array size when it is full
-static void garantir_espaco(void){
-    if (g_total == g_capacidade){
-        g_capacidade = g_capacidade * 2;
-        g_entradas = realloc(g_entradas, g_capacidade * sizeof(EntradaHistorico));
+static void garantir_espaco(Historico *h){
+    if (h->total == h->capacidade){
+        h->capacidade = h->capacidade * 2;
+        h->entradas = realloc(h->entradas, h->capacidade * sizeof(EntradaHistorico));
     }
 }
 
@@ -52,16 +42,16 @@ static void anexar_ao_arquivo(const char *caminho, const EntradaHistorico *e){
 }
 
 // loads saved history entries from a file
-void carregar_historico(const char *caminho_arquivo){
-    liberar_historico(); // clears any previous history in memory
+void carregar_historico(const char *caminho_arquivo, Historico *h, Metricas *metricas){
+    liberar_historico(h); // clears any previous history in memory
 
-    g_metricas.historico.entradas_carregadas = 0;
+    metricas->historico.entradas_carregadas = 0;
 
-    strcpy(g_caminho, caminho_arquivo); // saves file path for later writes
+    strcpy(h->caminho, caminho_arquivo); // saves file path for later writes
 
     // allocates initial memory for history entries
-    g_capacidade = CAPACIDADE_INICIAL;
-    g_entradas = malloc(g_capacidade * sizeof(EntradaHistorico));
+    h->capacidade = CAPACIDADE_INICIAL;
+    h->entradas = malloc(h->capacidade * sizeof(EntradaHistorico));
 
     FILE *f = fopen(caminho_arquivo, "r");
     if (f == NULL){
@@ -76,40 +66,34 @@ void carregar_historico(const char *caminho_arquivo){
         pontos[0] = '\0';
         ler_linha(f, pontos, TAM_LINHA);
 
-        garantir_espaco();
-        copiar_nome(g_entradas[g_total].nome, nome);
-        g_entradas[g_total].pontuacao = atoi(pontos); // converts score text to integer
-        g_total++;
+        garantir_espaco(h);
+        copiar_nome(h->entradas[h->total].nome, nome);
+        h->entradas[h->total].pontuacao = atoi(pontos); // converts score text to integer
+        h->total++;
     }
     fclose(f);
 
-    g_metricas.historico.entradas_carregadas = g_total; // updates loaded entries metric
+    metricas->historico.entradas_carregadas = h->total; // updates loaded entries metric
 }
 
 // adds entry to memory and file
-void adicionar_historico(const char *nome, int pontuacao){
-    garantir_espaco();
+void adicionar_historico(Historico *h, const char *nome, int pontuacao){
+    garantir_espaco(h);
 
     // fills next available slot in the array
-    EntradaHistorico *nova = &g_entradas[g_total];
+    EntradaHistorico *nova = &h->entradas[h->total];
     copiar_nome(nova->nome, nome);
     nova->pontuacao = pontuacao;
-    g_total++;
+    h->total++;
 
-    anexar_ao_arquivo(g_caminho, nova);
-}
-
-// returns pointer to entries and sets total count
-const EntradaHistorico* obter_entradas_historico(int *total_out){
-    *total_out = g_total;
-    return g_entradas;
+    anexar_ao_arquivo(h->caminho, nova);
 }
 
 // frees memory and resets history state
-void liberar_historico(void){
-    free(g_entradas);
-    g_entradas = NULL;
-    g_total = 0;
-    g_capacidade = 0;
-    g_caminho[0] = '\0';
+void liberar_historico(Historico *h){
+    free(h->entradas);
+    h->entradas = NULL;
+    h->total = 0;
+    h->capacidade = 0;
+    h->caminho[0] = '\0';
 }
