@@ -7,7 +7,6 @@ typedef struct {
     long long nos_inseridos;
     int       altura;
     long long rotacoes;
-    double    tempo_insercao_s;
     double    tempo_carga_s;
 
     // search count comparisons timing and rotations
@@ -27,11 +26,6 @@ typedef struct {
     long long colisoes;
 } MetricasHash;
 
-// stores data loading time
-typedef struct {
-    double    tempo_leitura_s;
-} MetricasCarga;
-
 // stores loaded history entry count
 typedef struct {
     int       entradas_carregadas;
@@ -39,12 +33,7 @@ typedef struct {
 
 // stores sorting benchmark results
 typedef struct {
-    // tracks runs and times for two sorting methods
-    int       medicoes[2];
-    double    ultimo_tempo_s[2];
-    double    melhor_tempo_s[2];
-    int       n_entradas[2];
-    // tracks overall sorting time and item count
+    // tracks last sorting time and item count
     double    ultimo_tempo_geral_s;
     int       ultimo_n_geral;
 } MetricasOrdenacao;
@@ -55,13 +44,8 @@ typedef struct {
     MetricasArvore    splay;
     int               splay_ativa; // indicates if splay tree is active
     MetricasHash      hash;
-    MetricasCarga     carga;
     MetricasHistorico historico;
     MetricasOrdenacao ordenacao;
-    int               partidas_encerradas; // total finished matches
 } Metricas;
-
-// global metrics shared across files
-extern Metricas g_metricas;
 
 #endif

@@ -15,10 +15,7 @@
 
 #define TAM_ENTRADA 256
 
-// simbolos de cada categoria, a posicao no vetor e o indice no estoque
-static const char PERENES[]    = "sqct";
-static const char PERECIVEIS[] = "nob";
-static const char INFINITOS[]  = "zkmpa";
+// validade de cada perecivel, na mesma ordem de PERECIVEIS (config.h)
 static const int  VALIDADE[3]  = { CFG_VALIDADE_CARNE, CFG_VALIDADE_OVO, CFG_VALIDADE_BACON };
 
 // contador pros perenes e um heap pra cada perecivel
@@ -1132,9 +1129,9 @@ static int ler_linha(char *buf, int tam){
 }
 
 // mostra o relatorio final (o mesmo texto que vai pro terminal e pro log)
-static void mostrar_relatorio(void){
+static void mostrar_relatorio(const Metricas *metricas){
     static char texto[TAM_BUFFER_RELATORIO];
-    gerar_texto_relatorio(texto, TAM_BUFFER_RELATORIO);
+    gerar_texto_relatorio(texto, TAM_BUFFER_RELATORIO, metricas);
 
     // separa em secoes: cada "-- titulo --" seguido das linhas dela
     const char *linhas[96];
@@ -1328,15 +1325,21 @@ static int acao_remover(Pilha *prato){
 }
 
 // uma partida inteira
-void jogo_executar(void){
-    pedidos_iniciar_partida();
+void jogo_executar(ArvoreAVL *avl, ArvoreSplay *splay, TabelaHash *hash, Historico *historico, Metricas *metricas){
+    pedidos_iniciar_partida(hash, metricas);
+
+    // sorteia os codigos de todos os clientes da partida, sem repetir
+    int codigos[CFG_NUM_CLIENTES];
+    sortear_codigos_pedidos(codigos, CFG_NUM_CLIENTES, avl_codigo_menor(avl), avl_codigo_maior(avl), hash, metricas);
 
     Fila fila;
     fila_inicializar(&fila);
     for (int i = 0; i < CFG_NUM_CLIENTES; i++){
+        Pedido ped;
+        get_pedido(codigos[i], &ped, avl, splay, metricas);
         Cliente c;
-        c.codigo = 0;
-        c.receita[0] = '\0';
+        c.codigo = ped.codigo;
+        strcpy(c.receita, ped.receita);
         c.paciencia = CFG_PACIENCIA_MAXIMA;
         fila_entrar(&fila, &c);
     }
@@ -1357,11 +1360,6 @@ void jogo_executar(void){
 
     while (!fila_vazia(&fila) && !derrota && !saiu){
         Cliente *cliente = fila_frente(&fila);
-
-        Pedido ped;
-        get_pedido(sortear_codigo_pedido(), &ped);
-        cliente->codigo = ped.codigo;
-        strcpy(cliente->receita, ped.receita);
 
         Lista receita;
         receita_para_lista(cliente->receita, &receita);
@@ -1447,9 +1445,12 @@ void jogo_executar(void){
     if (!ler_linha(linha, TAM_ENTRADA)){
         linha[0] = '\0';
     }
-    adicionar_historico(linha, atendidos);
-    exibir_e_gravar_relatorio_final(CFG_ARQUIVO_LOG);
+    adicionar_historico(historico, linha, atendidos);
+    exibir_e_gravar_relatorio_final(CFG_ARQUIVO_LOG, metricas);
 
-    mostrar_relatorio();
+    mostrar_relatorio(metricas);
     descarregar_texturas();
 }
+
+// PROFESSOR, NAO SE ASSUSTE, 90% DAS LINHAS É SÓ PRA DESENHAR AS COISAS PQ N BOTEI NENHUM PNG, NA VDD BOTEI NA PROMPT DO CLAUDE MAS ELE DECIDIU QUE ERA MELHOR
+// SIMPLISMENTE REPRODUZIR PIXEL A PIXEL, NAO SEI PORQUE ELE FEZ ISSO, MAS EU GOSTEI KK

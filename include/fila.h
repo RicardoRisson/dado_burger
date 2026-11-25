@@ -6,7 +6,7 @@
 // struct "principal" das coisas de atendimetno
 typedef struct {
     int codigo;
-    char receita[8];
+    char receita[TAM_MAX_RECEITA + 1];
     int paciencia;
 } Cliente;
 

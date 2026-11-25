@@ -1,4 +1,5 @@
 #include "../include/pilha.h"
+#include "../include/config.h"
 
 #include <stdlib.h>
 
@@ -27,17 +28,13 @@ char pilha_desempilhar(Pilha *p) {
     return s;
 }
 
-int pilha_tamanho(const Pilha *p) {
-    return p->tamanho;
-}
-
 int pilha_vazia(const Pilha *p) {
     return p->topo == NULL;
 }
 
 // ve se o pao de cima ja foi colocado
 int pilha_topo_e_z(const Pilha *p) {
-    return (p->topo != NULL && p->topo->simbolo == 'z');
+    return (p->topo != NULL && p->topo->simbolo == ING_PAO_CIMA);
 }
 
 // compara a pilha com a receita, topo da pilha com o fim da lista, sem desempilhar

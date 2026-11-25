@@ -1,3 +1,5 @@
+======
+
 FILA.C
 
 fila.c lida com a FILA de clientes, o fila_inicializar inicializa ela, fila_vazia é um dos elementos principais do jogo, 
@@ -20,6 +22,7 @@ e o tamanho, no caso, quantos clientes que tem na lista, pra saber tudo em O(1) 
 ======
 
 PILHA.C
+
 pilha_inicializar deixa a pilha vazia, com topo = NULL e tamanho = 0, o jogo.c chama quando chega cliente novo, prato começa
 vazio (na pratica com um pao em baixo)
 pilha_empilhar, coloca um ingreditente no topo, guarda o simbolo e faz o novo->prox apontar pro topo antigo, atualiza o topo 

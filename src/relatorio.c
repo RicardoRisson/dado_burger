@@ -16,9 +16,9 @@ static double media(long long total, long long quantidade){
 }
 
 // formats all performance metrics into text buffer
-int gerar_texto_relatorio(char *buffer, int tamanho){
+int gerar_texto_relatorio(char *buffer, int tamanho, const Metricas *metricas){
     int p = 0; // tracks write position in buffer
-    const Metricas *m = &g_metricas;
+    const Metricas *m = metricas;
     (void) tamanho; // suppresses unused parameter warning
 
     p += sprintf(buffer + p, "=== RELATORIO DE DESEMPENHO ===\n\n");
@@ -89,9 +89,9 @@ int gerar_texto_relatorio(char *buffer, int tamanho){
 }
 
 // builds report and saves to log file
-void gravar_relatorio_log(const char *caminho_log){
+void gravar_relatorio_log(const char *caminho_log, const Metricas *metricas){
     char texto[TAM_BUFFER_RELATORIO];
-    gerar_texto_relatorio(texto, TAM_BUFFER_RELATORIO);
+    gerar_texto_relatorio(texto, TAM_BUFFER_RELATORIO, metricas);
 
     FILE *f = fopen(caminho_log, "w");
     fputs(texto, f);
@@ -99,24 +99,15 @@ void gravar_relatorio_log(const char *caminho_log){
 }
 
 // writes initial loading report to log file
-void registrar_log_carregamento(const char *caminho_log){
-    gravar_relatorio_log(caminho_log);
+void registrar_log_carregamento(const char *caminho_log, const Metricas *metricas){
+    gravar_relatorio_log(caminho_log, metricas);
 }
 
 // prints final report and saves to log
-void exibir_e_gravar_relatorio_final(const char *caminho_log){
-    g_metricas.partidas_encerradas++; // counts finished match
-
+void exibir_e_gravar_relatorio_final(const char *caminho_log, const Metricas *metricas){
     char texto[TAM_BUFFER_RELATORIO];
-    gerar_texto_relatorio(texto, TAM_BUFFER_RELATORIO);
+    gerar_texto_relatorio(texto, TAM_BUFFER_RELATORIO, metricas);
     fputs(texto, stdout); // prints report to standard output
 
-    gravar_relatorio_log(caminho_log);
-}
-
-// updates sorting stats and refreshes log file
-void atualizar_log_ordenacao(const char *caminho_log, double tempo_s, int n_entradas){
-    g_metricas.ordenacao.ultimo_tempo_geral_s = tempo_s;
-    g_metricas.ordenacao.ultimo_n_geral = n_entradas;
-    gravar_relatorio_log(caminho_log);
+    gravar_relatorio_log(caminho_log, metricas);
 }

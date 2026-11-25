@@ -1,48 +1,11 @@
 #include "../include/pedidos.h"
-#include "../include/avl.h"
-#include "../include/splay.h"
-#include "../include/hash.h"
-#include "../include/metricas.h"
 #include "../include/timer.h"
 #include "../include/config.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
 
-#define CAPACIDADE_INICIAL 4096
 #define TAM_LINHA          256
-
-// stores loaded orders and array size
-static Pedido     *g_todos      = NULL;
-static int         g_total      = 0;
-static int         g_capacidade = 0;
-
-// search trees cache and status flags
-static ArvoreAVL   g_avl;
-static ArvoreSplay g_splay;
-static TabelaHash  g_cache;
-static int         g_carregado = 0;
-static int         g_splay_ativa = 0;
-
-// seed state for random generator
-static unsigned int g_aleatorio = 2463534242u;
-
-// generates next random number
-static unsigned int proximo_aleatorio(void) {
-    unsigned int x = g_aleatorio;
-    // mixes bits using shift operations
-    x ^= x << 13;
-    x ^= x >> 17;
-    x ^= x << 5;
-    g_aleatorio = x;
-    return x;
-}
-
-// sets seed for random generator
-void pedidos_definir_semente(unsigned int semente) {
-    g_aleatorio = semente;
-}
 
 // reads a line and removes newlines
 static int ler_linha(FILE *f, char *buf, int tam) {
@@ -53,136 +16,117 @@ static int ler_linha(FILE *f, char *buf, int tam) {
     return 1;
 }
 
-// adds an order to the array
-static void guardar_no_vetor(int codigo, const char *receita) {
-    // doubles array capacity when full
-    if (g_total == g_capacidade) {
-        g_capacidade = g_capacidade * 2;
-        g_todos = realloc(g_todos, g_capacidade * sizeof(Pedido));
-    }
-    g_todos[g_total].codigo = codigo;
-    strcpy(g_todos[g_total].receita, receita);
-    g_total++;
-}
-
 // loads orders from file into structures
-int carregar_pedidos(const char *caminho_arquivo) {
-    liberar_pedidos(); // clears previously loaded data
-
-    // resets performance metrics to zero
-    memset(&g_metricas.avl, 0, sizeof(MetricasArvore));
-    memset(&g_metricas.splay, 0, sizeof(MetricasArvore));
-    memset(&g_metricas.carga, 0, sizeof(MetricasCarga));
-    memset(&g_metricas.hash, 0, sizeof(MetricasHash));
-    g_metricas.splay_ativa = 0;
-
-    // sets random seed from current time
-    pedidos_definir_semente((unsigned int) time(NULL) ^ ((unsigned int) clock() * 2654435761u));
-
+int carregar_pedidos(const char *caminho_arquivo, ArvoreAVL *avl, ArvoreSplay *splay, Metricas *metricas) {
     // opens orders file for reading
     FILE *f = fopen(caminho_arquivo, "r");
     if (f == NULL)
         return 0;
 
-    // allocates initial memory for orders
-    g_capacidade = CAPACIDADE_INICIAL;
-    g_todos = malloc(g_capacidade * sizeof(Pedido));
-
-    // starts timers for loading and reading
-    Timer t_total;
-    timer_iniciar(&t_total);
-
-    Timer t_leitura;
-    timer_iniciar(&t_leitura);
-
     char linha_codigo[TAM_LINHA];
     char linha_receita[TAM_LINHA];
+    Pedido pedido;
 
-    // reads pairs of code and recipe lines
-    while (ler_linha(f, linha_codigo, TAM_LINHA) && ler_linha(f, linha_receita, TAM_LINHA))
-        guardar_no_vetor(atoi(linha_codigo), linha_receita);
-    fclose(f);
-    g_metricas.carga.tempo_leitura_s = timer_parar(&t_leitura);
-
-    avl_inicializar(&g_avl, &g_metricas.avl); // sets up empty avl tree
+    avl_inicializar(avl, &metricas->avl); // sets up empty avl tree
 
     Timer t_avl;
     timer_iniciar(&t_avl);
-    int guardados = 0;
-    // inserts unique orders into avl tree
-    for (int i = 0; i < g_total; i++) {
-        if (avl_inserir(&g_avl, &g_todos[i]) == 1)
-            g_todos[guardados++] = g_todos[i];
+    // reads pairs of code and recipe lines and inserts them into avl tree
+    while (ler_linha(f, linha_codigo, TAM_LINHA) && ler_linha(f, linha_receita, TAM_LINHA)) {
+        pedido.codigo = atoi(linha_codigo);
+        strcpy(pedido.receita, linha_receita);
+        avl_inserir(avl, &pedido);
     }
-    g_metricas.avl.tempo_insercao_s = timer_parar(&t_avl);
-    g_total = guardados; // updates count after skipping duplicates
-    g_metricas.avl.tempo_carga_s = timer_parar(&t_total);
-    g_metricas.avl.altura = avl_altura(&g_avl);
+    metricas->avl.tempo_carga_s = timer_parar(&t_avl);
+    metricas->avl.altura = avl_altura(avl);
 
-    g_splay_ativa = 0;
-    splay_inicializar(&g_splay, &g_metricas.splay);
+    metricas->splay_ativa = 0;
+    splay_inicializar(splay, &metricas->splay);
     // builds splay tree if comparison is active
     if (CFG_COMPARAR_SPLAY) {
+        rewind(f);
         Timer t_splay;
         timer_iniciar(&t_splay);
-        // inserts orders into splay tree
-        for (int i = 0; i < g_total; i++) {
-            splay_inserir(&g_splay, &g_todos[i]);
+        // reads the file again and inserts orders into splay tree
+        while (ler_linha(f, linha_codigo, TAM_LINHA) && ler_linha(f, linha_receita, TAM_LINHA)) {
+            pedido.codigo = atoi(linha_codigo);
+            strcpy(pedido.receita, linha_receita);
+            splay_inserir(splay, &pedido);
         }
-        g_metricas.splay.tempo_insercao_s = timer_parar(&t_splay);
+        metricas->splay.tempo_carga_s = timer_parar(&t_splay);
 
-        splay_calcular_altura(&g_splay);
-        g_metricas.splay.tempo_carga_s = g_metricas.carga.tempo_leitura_s + g_metricas.splay.tempo_insercao_s;
-        g_splay_ativa = 1;
-        g_metricas.splay_ativa = 1;
+        splay_calcular_altura(splay);
+        metricas->splay_ativa = 1;
     }
-
-    hash_inicializar(&g_cache, CFG_HASH_M, &g_metricas.hash); // initializes hash table cache
-
-    g_carregado = 1;
+    fclose(f);
     return 1;
 }
 
 // finds an order by its code
-int get_pedido(int codigo, Pedido *pedido_out) {
-    // returns early if found in cache
-    if (hash_buscar(&g_cache, codigo, pedido_out))
-        return 1;
-
+int get_pedido(int codigo, Pedido *pedido_out, ArvoreAVL *avl, ArvoreSplay *splay, const Metricas *metricas) {
     // searches order in avl tree
-    const Pedido *achou = avl_buscar(&g_avl, codigo);
+    const Pedido *achou = avl_buscar(avl, codigo);
 
     // runs search on splay tree too
-    if (g_splay_ativa)
-        splay_buscar(&g_splay, codigo);
+    if (metricas->splay_ativa)
+        splay_buscar(splay, codigo);
 
     if (achou == NULL)
         return 0;
 
-    // saves found order to cache
     *pedido_out = *achou;
-    hash_inserir(&g_cache, achou);
     return 1;
 }
 
-// picks a random order code
-int sortear_codigo_pedido(void) {
-    unsigned int indice = proximo_aleatorio() % (unsigned int) g_total;
-    return g_todos[indice].codigo;
+// draws quantidade different order codes between inf and sup, using the hash to detect repeated ones
+void sortear_codigos_pedidos(int *vetor, int quantidade, int inf, int sup, TabelaHash *hash, Metricas *metricas) {
+    metricas->hash.hits = 0;
+    metricas->hash.misses = 0;
+    metricas->hash.colisoes = 0;
+    int codigo = 0;
+    int i = 0;
+    while (i < quantidade) {
+        codigo = rand() % (sup - inf + 1) + inf;
+        // if there are less orders than clients, repeated codes are allowed
+        if (quantidade > metricas->avl.nos_inseridos) {
+            vetor[i] = codigo;
+            i++;
+        } else {
+            // code was already drawn
+            if (hash_buscar(hash, codigo) != -1) {
+                metricas->hash.hits++;
+            } else {
+                metricas->hash.misses++;
+                // slot already taken = 1 collision
+                if (hash_houve_colisao(hash, codigo) == 1) {
+                    metricas->hash.colisoes++;
+                }
+                vetor[i] = codigo;
+                hash_inserir(hash, codigo, codigo);
+                i++;
+            }
+        }
+    }
+    metricas->hash.n = hash->n;
 }
 
 // resets search metrics for new match
-void pedidos_iniciar_partida(void) {
-    g_metricas.avl.buscas = 0;
-    g_metricas.avl.comparacoes = 0;
-    g_metricas.avl.tempo_busca_s = 0.0;
-    g_metricas.avl.rotacoes_busca = 0;
+void pedidos_iniciar_partida(TabelaHash *hash, Metricas *metricas) {
+    metricas->avl.buscas = 0;
+    metricas->avl.comparacoes = 0;
+    metricas->avl.tempo_busca_s = 0.0;
+    metricas->avl.rotacoes_busca = 0;
 
-    g_metricas.splay.buscas = 0;
-    g_metricas.splay.comparacoes = 0;
-    g_metricas.splay.tempo_busca_s = 0.0;
-    g_metricas.splay.rotacoes_busca = 0;
+    metricas->splay.buscas = 0;
+    metricas->splay.comparacoes = 0;
+    metricas->splay.tempo_busca_s = 0.0;
+    metricas->splay.rotacoes_busca = 0;
 
+    // recreates the hash for the new match (it only holds the codes drawn in one match)
+    hash_destruir(hash);
+    hash_inicializar(hash, CFG_HASH_M);
+    metricas->hash.m = hash->m;
+    metricas->hash.n = hash->n;
 }
 
 // converts recipe text into a list
@@ -193,15 +137,8 @@ void receita_para_lista(const char *receita, Lista *lista_out) {
     }
 }
 
-// frees all memory and resets state
-void liberar_pedidos(void) {
-    hash_destruir(&g_cache);
-    splay_destruir(&g_splay);
-    avl_destruir(&g_avl);
-    free(g_todos);
-    g_todos = NULL;
-    g_total = 0;
-    g_capacidade = 0;
-    g_carregado = 0;
-    g_splay_ativa = 0;
+// frees all memory
+void liberar_pedidos(ArvoreAVL *avl, ArvoreSplay *splay) {
+    splay_destruir(splay);
+    avl_destruir(avl);
 }
