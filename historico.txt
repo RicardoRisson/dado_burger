@@ -1,5 +1,3 @@
-Teste
-999
 Tamires A.
 15
 Yuri E.
@@ -200000,37 +199998,3 @@ Leandro B. B.
 8
 Fernando O.
 32
-zero
-0
-
-1
-Ricardo M.
-6
-rick2
-6
-
-0
-blabla
-6
-
-0
-l
-0
-s
-0
-jailson
-1
-qualquer
-1
-la
-1
-ladp
-0
-a
-0
-rick
-6
-carlos
-6
-rick
-6
