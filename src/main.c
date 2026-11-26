@@ -392,7 +392,6 @@ static const Botao BOTOES_HIST[2] = {
 };
 
 static void desenhar_escolha_historico(const char *buf, const Metricas *metricas){
-    (void) metricas;
     ClearBackground(COR_FUNDO);
     painel((Rectangle){ 340, 140, 600, 440 }, 14, COR_PAINEL, COR_BORDA);
     texto_centro("HISTÓRICO", LARGURA_TELA / 2.0f, 170, 40, COR_LARANJA);

@@ -39,7 +39,6 @@
 #define ING_BACON         'b'
 
 // ingredientes de cada categoria, a posicao na string e o indice no estoque
-// (tem que bater com os simbolos de cima)
 #define PERENES    "sqct"
 #define PERECIVEIS "nob"
 #define INFINITOS  "zkmpa"

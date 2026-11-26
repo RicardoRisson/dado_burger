@@ -1221,7 +1221,7 @@ static void descartar_vencidos(Estoque *e, int turno){
     }
 }
 
-// copia o pedido, o prato e o estoque pra cena (so le, nao desempilha nada)
+// copia o pedido, o prato e o estoque pra cena
 static void mostrar_tela(const Cliente *c, int numero, const Pilha *prato, const Estoque *e, int turno){
     g_cena.numero = numero;
     g_cena.turno = turno;

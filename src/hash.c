@@ -1,7 +1,7 @@
 #include "../include/hash.h"
 #include <stdlib.h>
 
-// funcao de hash por divisao: resto da chave por m
+// resto da chave por m
 static int hashDivisao(int chave, int m){
     return chave % m;
 }
@@ -13,7 +13,7 @@ void hash_inicializar(TabelaHash *t, int m){
     t->slots = calloc((size_t) m, sizeof(NoHash*));
 }
 
-// insere o par chave/valor no comeco da lista do slot (encadeamento separado)
+// insere o par chave no comeco da lista do slot, encadeamento separado
 void hash_inserir(TabelaHash *t, int chave, int valor){
     int i = hashDivisao(chave, t->m);
 

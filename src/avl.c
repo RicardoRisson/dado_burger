@@ -9,7 +9,7 @@ static int maximo(int a, int b) {
     return b;
 }
 
-// gets the height of a node (leaf = 0, NULL = -1, as in class)
+// gets the height of a node leaf = 0, NULL = -1
 static int altura_no(const NoAVL *n) {
     if (n == NULL)
         return -1;
@@ -122,7 +122,7 @@ int avl_inserir(ArvoreAVL *a, const Pedido *p) {
     // records new node count and tree height
     if (resultado == 1) {
         a->met->nos_inseridos++;
-        a->met->altura = altura_no(a->raiz) + 1; // reported in levels (empty = 0, leaf = 1)
+        a->met->altura = altura_no(a->raiz) + 1; // reported in levels empty = 0 leaf = 1
     }
     return resultado;
 }
@@ -157,7 +157,7 @@ const Pedido* avl_buscar(ArvoreAVL *a, int codigo) {
     return achou;
 }
 
-// returns the smallest order code (leftmost node)
+// returns the smallest order code 
 int avl_codigo_menor(const ArvoreAVL *a) {
     const NoAVL *no = a->raiz;
     if (no == NULL)
@@ -167,7 +167,7 @@ int avl_codigo_menor(const ArvoreAVL *a) {
     return no->pedido.codigo;
 }
 
-// returns the biggest order code (rightmost node)
+// returns the biggest order code 
 int avl_codigo_maior(const ArvoreAVL *a) {
     const NoAVL *no = a->raiz;
     if (no == NULL)
@@ -177,7 +177,7 @@ int avl_codigo_maior(const ArvoreAVL *a) {
     return no->pedido.codigo;
 }
 
-// returns total height of the tree in levels (empty = 0, only root = 1)
+// returns total height of the tree in levels empty = 0, only root = 1
 int avl_altura(const ArvoreAVL *a) {
     return altura_no(a->raiz) + 1;
 }
