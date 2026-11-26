@@ -8,7 +8,7 @@
 
 typedef struct NoAVL {
     Pedido pedido;        // the order
-    int    altura;        // height of this node (leaf = 1)
+    int    altura;        // height of this node (leaf = 0, NULL = -1)
     struct NoAVL *esq;    // left child, smaller codes
     struct NoAVL *dir;    // right child, bigger codes
 } NoAVL;
@@ -31,7 +31,7 @@ const Pedido* avl_buscar(ArvoreAVL *a, int codigo);
 int avl_codigo_menor(const ArvoreAVL *a);
 int avl_codigo_maior(const ArvoreAVL *a);
 
-// returns the height (empty = 0, only root = 1)
+// returns the height in levels (empty = 0, only root = 1)
 int avl_altura(const ArvoreAVL *a);
 
 // frees all the nodes

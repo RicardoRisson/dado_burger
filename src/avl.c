@@ -9,10 +9,10 @@ static int maximo(int a, int b) {
     return b;
 }
 
-// gets the height of a node
+// gets the height of a node (leaf = 0, NULL = -1, as in class)
 static int altura_no(const NoAVL *n) {
     if (n == NULL)
-        return 0;
+        return -1;
     return n->altura;
 }
 
@@ -30,7 +30,7 @@ static void atualizar_altura(NoAVL *n) {
 static NoAVL* criar_no(const Pedido *p) {
     NoAVL *n = malloc(sizeof(NoAVL));
     n->pedido = *p;
-    n->altura = 1;
+    n->altura = 0; // a new node is a leaf
     n->esq = NULL;
     n->dir = NULL;
     return n;
@@ -122,7 +122,7 @@ int avl_inserir(ArvoreAVL *a, const Pedido *p) {
     // records new node count and tree height
     if (resultado == 1) {
         a->met->nos_inseridos++;
-        a->met->altura = altura_no(a->raiz);
+        a->met->altura = altura_no(a->raiz) + 1; // reported in levels (empty = 0, leaf = 1)
     }
     return resultado;
 }
@@ -177,9 +177,9 @@ int avl_codigo_maior(const ArvoreAVL *a) {
     return no->pedido.codigo;
 }
 
-// returns total height of the tree
+// returns total height of the tree in levels (empty = 0, only root = 1)
 int avl_altura(const ArvoreAVL *a) {
-    return altura_no(a->raiz);
+    return altura_no(a->raiz) + 1;
 }
 
 // frees all nodes from bottom to top
